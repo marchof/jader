@@ -6,6 +6,8 @@ import static jader.scene.Light.point;
 import static jader.shape.Color.BLACK;
 import static jader.shape.Color.rgb;
 import static jader.shape.CombinedShapes.intersect;
+import static jader.shape.CombinedShapes.smoothSubtract;
+import static jader.shape.CombinedShapes.smoothUnion;
 import static jader.shape.CombinedShapes.subtract;
 import static jader.shape.CombinedShapes.union;
 import static jader.shape.SimpleShapes.box;
@@ -61,6 +63,16 @@ public class ExampleScenes {
 	}
 
 	public static Scene scene5() {
+		return standardSetting( //
+				smoothUnion(
+						box(vec3(-0.45, -0.4, 0.4), vec3(0.3, 0.1, 0.3), 0.05f).with(Material.diffuse(rgb(200, 0, 0))),
+						sphere(vec3(-0.45, -0.35, 0.4), 0.2f).with(Material.diffuse(rgb(0, 160, 0))), 0.02f), //
+				smoothSubtract(
+						box(vec3(0.45, -0.4, 0.4), vec3(0.3, 0.1, 0.3), 0.05f).with(Material.diffuse(rgb(200, 0, 0))),
+						sphere(vec3(0.45, -0.3, 0.4), 0.2f).with(Material.diffuse(rgb(0, 160, 0))), 0.02f));
+	}
+
+	public static Scene scene6() {
 		return new Scene( //
 				union(SimpleShapes.planeXZ(-0.5f).with(Material.DEFAULT), //
 						box(vec3(-0.9, -0.2, 0.2), vec3(0.1, 0.3, 0.1)).with(Material.DEFAULT), //

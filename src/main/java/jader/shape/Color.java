@@ -33,7 +33,7 @@ public record Color(float red, float green, float blue) {
 				(float) Math.pow(g / 255.0, GAMMA), //
 				(float) Math.pow(b / 255.0, GAMMA));
 	}
-	
+
 	public boolean isNonBlack() {
 		return red > 0f || green > 0f || blue > 0f;
 	}
@@ -68,6 +68,14 @@ public record Color(float red, float green, float blue) {
 				(float) Math.pow(this.blue, e));
 	}
 
+	public Color blend(Color other, float f) {
+		var nf = 1.0f - f;
+		return new Color( //
+				this.red * nf + other.red * f, //
+				this.green * nf + other.green * f, //
+				this.blue * nf + other.blue * f);
+	}
+
 	/**
 	 * Fills gamma corrected RGB components into the given array.
 	 */
@@ -76,7 +84,5 @@ public record Color(float red, float green, float blue) {
 		components[1] = (int) (Math.pow(green, 1.0 / GAMMA) * 255f);
 		components[2] = (int) (Math.pow(blue, 1.0 / GAMMA) * 255f);
 	}
-
-
 
 }

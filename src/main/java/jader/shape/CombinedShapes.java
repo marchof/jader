@@ -21,6 +21,44 @@ public class CombinedShapes {
 		};
 	}
 
+	public static Shape smoothUnion(Shape shape1, Shape shape2, float k) {
+		var k4 = k * 4.0f;
+		return p -> {
+			var dist1 = shape1.distance(p);
+			var dist2 = shape2.distance(p);
+			float l1 = dist1.length();
+			float l2 = dist2.length();
+			float h = Math.max(k4 - Math.abs(l1 - l2), 0.0f);
+			var d = Math.min(l1, l2) - h * h * 0.25f / k4;
+			return new BlendedMaterialDistance(d, dist1, dist2, l1 / (l1 + l2));
+		};
+	}
+	
+	public static Shape smoothSubtract(Shape shape1, Shape shape2, float k) {
+		var k4 = k * 4.0f;
+		return p -> {
+			var dist1 = shape1.distance(p);
+			var dist2 = shape2.distance(p);
+			float l1 = -dist1.length();
+			float l2 = dist2.length();
+			float h = Math.max(k4 - Math.abs(l1 - l2), 0.0f);
+			var d = Math.min(l1, l2) - h * h * 0.25f / k4;
+			return new BlendedMaterialDistance(-d, dist1, dist2, l1 / (l1 + l2));
+		};
+	}
+	
+	private static record BlendedMaterialDistance(float length, Distance d1, Distance d2, float f) implements Shape.Distance {
+		@Override
+		public Material material() {
+			return d1.material().blend(d2.material(), f);
+		}
+
+		@Override
+		public Distance negdist() {
+			return new BlendedMaterialDistance(-length, d1, d2, f);
+		}
+	}
+
 	// While the following methods could be nicely implements with streams, the
 	// performance drawback is too big for this critical path operations. Therefore
 	// we use these allocation free implementations.

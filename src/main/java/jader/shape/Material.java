@@ -32,6 +32,21 @@ public record Material(
 	public boolean isReflective() {
 		return reflectiveColor.isNonBlack();
 	}
+	
+	public Material blend(Material other, float f) {
+		if (f < 0.001f) {
+			return this;
+		}
+		if (f > 0.999f) {
+			return other;
+		}
+		return new Material( //
+				this.diffuseColor.blend(other.diffuseColor, f), //
+				this.reflectiveColor.blend(other.reflectiveColor, f), //
+				this.specularColor.blend(other.specularColor, f), //
+				this.shinyness * (1.0f - f) + other.shinyness * f);
+	}
+
 
 	public static final Material DEFAULT = diffuse(rgb(240, 240, 240));
 

@@ -22,11 +22,15 @@ The following [example scenes](src/main/java/jader/ui/ExampleScenes.java) show t
 
 ### Boolean Operations: Intersection, Subtraction, Union
 
-![Intersection](src/test/resources/referencescenes/scene4.png)
+![Boolean Operations](src/test/resources/referencescenes/scene4.png)
+
+### Smooth Union and Subtraction
+
+![Smooth Boolean Operations](src/test/resources/referencescenes/scene5.png)
 
 ### Soft Shadows and Ambient Occlusion
 
-![Soft Shadows](src/test/resources/referencescenes/scene5.png)
+![Soft Shadows](src/test/resources/referencescenes/scene6.png)
 
 ### Additive Color Mixing
 
@@ -56,7 +60,6 @@ its surface. A Shape can have many different Materials on its surface.
 
 ## Future Features
 
-* Smooth Blending
 * Shape Transformation (translate, rotate, scale)
 * Shape Repetition
 * Textures
