@@ -16,8 +16,8 @@ public class CombinedShapes {
 	public static Shape subtract(Shape a, Shape b) {
 		return p -> {
 			var dista = a.distance(p);
-			var distb = b.distance(p).negdist();
-			return (dista.length() > distb.length()) ? dista : distb;
+			var distb = b.distance(p);
+			return (dista.length() > -distb.length()) ? dista : distb.negdist();
 		};
 	}
 
