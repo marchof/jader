@@ -1,5 +1,6 @@
 package jader;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -11,12 +12,19 @@ public class ExportScenes {
 
 	static final int WIDTH = 480;
 	static final int HEIGHT = 320;
-	
+
 	static final Path OUTPUT_FOLDER = Path.of("target/referencescenes");
-	
+
 	static void export(Scene scene, String filename) throws Exception {
 		Files.createDirectories(OUTPUT_FOLDER);
-		new Exporter(scene, 4).exportPNG(WIDTH, HEIGHT, OUTPUT_FOLDER.resolve(filename));
+		var info = PerfInfo.run(() -> {
+			try {
+				new Exporter(scene, 4).exportPNG(WIDTH, HEIGHT, OUTPUT_FOLDER.resolve(filename));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		System.out.println("Exported " + filename + " with " + info);
 	}
 
 	public static void main(String[] args) throws Exception {
