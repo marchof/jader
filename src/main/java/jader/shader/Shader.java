@@ -63,8 +63,10 @@ public class Shader {
 					var blur = Math.min(1.0f, rm.distanceRatio() / (point.radius() / ld));
 					var diffuseFactor = hitNormal.dot(ln);
 					color = color.mulAdd(material.diffuseColor(), point.color(), diffuseFactor * blur);
-					var specularFactor = (float) Math.pow(reflectionDirection.dot(ln), material.shinyness());
-					color = color.mulAdd(material.specularColor(), point.color(), specularFactor * blur);
+					if (material.specularColor().isNonBlack()) {
+						var specularFactor = (float) Math.pow(Math.abs(reflectionDirection.dot(ln)), material.shinyness());
+						color = color.mulAdd(material.specularColor(), point.color(), specularFactor * blur);
+					}
 				}
 				break;
 			}
