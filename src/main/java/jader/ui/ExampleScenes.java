@@ -97,8 +97,8 @@ public class ExampleScenes {
 						shapes)), //
 				List.of( //
 						ambient(rgb(64, 64, 64)), //
-						point(vec3(-5, 5, 2), 1.0f), //
-						point(vec3(5, 5, 2), 1.0f)), //
+						point(vec3(-5, 5, 2), 0.6f), //
+						point(vec3(5, 5, 2), 0.6f)), //
 				Camera.direction(vec3(0, 0, 2), vec3(0, 0, -1)), //
 				Color.WHITE);
 	}
