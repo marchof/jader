@@ -16,6 +16,10 @@ public interface Surface {
 		return at -> this.material(vec2((at.x() * fx) % 1f, (at.y() * fy) % 1f));
 	}
 
+	default Surface move(float dx, float dy) {
+		return at -> this.material(vec2((at.x() + dx) % 1f, (at.y() + dy) % 1f));
+	}
+	
 	public static Surface uniform(Material material) {
 		return p -> material;
 	}

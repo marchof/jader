@@ -93,7 +93,7 @@ public class ExampleScenes {
 		return new Scene( //
 				union(concat(SimpleShapes.planeXZ(-0.5f)
 						.with(Surface.checker(Material.glossy(BLACK, 0.3f, 0.3f),
-								Material.glossy(rgb(210, 210, 210), 0.3f, 0.3f))),
+								Material.glossy(rgb(210, 210, 210), 0.3f, 0.3f)).move(0.75f, 0.0f)),
 						shapes)), //
 				List.of( //
 						ambient(rgb(64, 64, 64)), //
