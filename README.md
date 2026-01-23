@@ -2,7 +2,7 @@
 
 > A CPU-based 3D shader implemented entirely in modern Java
 
-Jader is a small experimental project showcasing what is possible with modern, plain Java for real-time graphics. It implements a full 3D renderer using [ray marching](https://en.wikipedia.org/wiki/Ray_marching), a technique that represents complex 3D geometry as simple mathematical distance functions.
+Jader is a small experimental project showcasing what is possible with modern, plain Java. It implements a full 3D renderer using [ray marching](https://en.wikipedia.org/wiki/Ray_marching), a technique that represents complex 3D geometry as simple mathematical distance functions.
 
 The project emphasizes a clean and minimal code structure, focusing on readability and modern Java language features, while still achieving surprisingly good rendering quality and performance for a pure Java implementation.
 
@@ -49,15 +49,6 @@ If you want to learn more about the algorithms use for 3D rendering with ray mar
 * [Soft Shadows in Raymarched SDFs, Inigo Quilez, 2010](https://iquilezles.org/articles/rmshadows/)
 * [Volumetric Rendering: Ambient Occlusion, Alan Zucconi, 2016](https://www.alanzucconi.com/2016/07/01/ambient-occlusion/)
 
-## Model
-
-A Shape describes a arbitrary 3D object. It can be a primitive or a combination
-of other Shapes.
-
-A Material describes the physical properties of a Shape at a specific point on
-its surface. A Shape can have many different Materials on its surface.
-
-
 ## Future Features
 
 * Shape Transformation (translate, rotate, scale)
@@ -68,6 +59,8 @@ its surface. A Shape can have many different Materials on its surface.
 * Render Animations
 * UI with Viewpoint Interaction
 * UI with Progressive Rendering
+* Optionally add performance info to rendered images
+* "3D Live Coding"
 
 
 ## Credits
