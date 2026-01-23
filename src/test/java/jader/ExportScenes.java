@@ -13,7 +13,7 @@ public class ExportScenes {
 	static final int WIDTH = 480;
 	static final int HEIGHT = 320;
 
-	static final Path OUTPUT_FOLDER = Path.of("target/referencescenes");
+	static final Path OUTPUT_FOLDER = Path.of("target/export/referencescenes");
 
 	static void export(Scene scene, String filename) throws Exception {
 		Files.createDirectories(OUTPUT_FOLDER);

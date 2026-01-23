@@ -28,7 +28,7 @@ public class MaterialGallery {
 	private static final int HEIGHT = 320;
 	private static final int OVERSAMPLING = 4;
 	
-	private static final Path EXPORT_FOLDER = Path.of("target/export");
+	private static final Path EXPORT_FOLDER = Path.of("target/export/materials");
 
 	private static Scene getSzene(Material material) {
 		return new Scene( //
