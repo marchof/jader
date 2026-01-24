@@ -27,15 +27,14 @@ public class Shader {
 	}
 
 	public Color getColor(Vec3 start, Vec3 direction) {
-		var rm = RayMarch.from(start, direction, scene.shape(), MAX_MARCH_DIST);
-		if (rm.isHit()) {
-			return getColor(direction, rm, 0);
-		} else {
-			return scene.background();
-		}
+		return getColor(start, direction, 0);
 	}
 
-	private Color getColor(Vec3 viewDirection, RayMarch hit, int reflectionCount) {
+	private Color getColor(Vec3 start, Vec3 viewDirection, int reflectionCount) {
+		var hit = RayMarch.from(start, viewDirection, scene.shape(), MAX_MARCH_DIST);
+		if (!hit.isHit()) {
+			return scene.background();
+		}
 
 		var color = Color.BLACK;
 		var material = hit.material();
@@ -64,7 +63,8 @@ public class Shader {
 					var diffuseFactor = hitNormal.dot(ln);
 					color = color.mulAdd(material.diffuseColor(), point.color(), diffuseFactor * blur);
 					if (material.specularColor().isNonBlack()) {
-						var specularFactor = (float) Math.pow(Math.abs(reflectionDirection.dot(ln)), material.shinyness());
+						var specularFactor = (float) Math.pow(Math.abs(reflectionDirection.dot(ln)),
+								material.shinyness());
 						color = color.mulAdd(material.specularColor(), point.color(), specularFactor * blur);
 					}
 				}
@@ -73,16 +73,8 @@ public class Shader {
 		}
 
 		// Reflections from the scene:
-		if (material.isReflective()) {
-			var rm = RayMarch.from(hoverHitPoint, reflectionDirection, scene.shape(), MAX_MARCH_DIST);
-			var reflected = Color.BLACK;
-			if (rm.isHit()) {
-				if (reflectionCount < MAX_REFELECTION_COUNT) {
-					reflected = getColor(reflectionDirection, rm, reflectionCount + 1);
-				}
-			} else {
-				reflected = scene.background();
-			}
+		if (material.isReflective() && reflectionCount < MAX_REFELECTION_COUNT) {
+			var reflected = getColor(hoverHitPoint, reflectionDirection, reflectionCount + 1);
 			color = color.mulAdd(material.reflectiveColor(), reflected);
 		}
 
