@@ -34,6 +34,7 @@ public class ExportScenes {
 		export(ExampleScenes.scene4(), "scene4.png");
 		export(ExampleScenes.scene5(), "scene5.png");
 		export(ExampleScenes.scene6(), "scene6.png");
+		export(ExampleScenes.scene7(), "scene7.png");
 	}
 
 }

@@ -28,9 +28,13 @@ The following [example scenes](src/main/java/jader/ui/ExampleScenes.java) show t
 
 ![Smooth Boolean Operations](src/test/resources/referencescenes/scene5.png)
 
+### Smooth Union with Surface Blending
+
+![Smooth Boolean Operations](src/test/resources/referencescenes/scene6.png)
+
 ### Soft Shadows and Ambient Occlusion
 
-![Soft Shadows](src/test/resources/referencescenes/scene6.png)
+![Soft Shadows](src/test/resources/referencescenes/scene7.png)
 
 ### Additive Color Mixing
 
@@ -49,8 +53,9 @@ If you want to learn more about the algorithms use for 3D rendering with ray mar
 * [Soft Shadows in Raymarched SDFs, Inigo Quilez, 2010](https://iquilezles.org/articles/rmshadows/)
 * [Volumetric Rendering: Ambient Occlusion, Alan Zucconi, 2016](https://www.alanzucconi.com/2016/07/01/ambient-occlusion/)
 
-## Future Features
+## Ideas for Future Features
 
+* More primitive Shapes: Cylinder, Cone, Torus
 * Shape Transformation (translate, rotate, scale)
 * Shape Repetition
 * Textures
