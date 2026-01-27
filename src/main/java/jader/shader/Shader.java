@@ -14,7 +14,7 @@ public class Shader {
 	private static final int AO_STEPS = 5;
 	private static final float OA_DECAY = 0.9f;
 
-	private Scene scene;
+	private final Scene scene;
 
 	public Shader(Scene scene) {
 		this.scene = scene;
