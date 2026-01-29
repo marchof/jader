@@ -17,7 +17,7 @@ public class CombinedShapes {
 		return p -> {
 			var dista = a.distance(p);
 			var distb = b.distance(p);
-			return (dista.length() > -distb.length()) ? dista : distb.negdist();
+			return (dista.length() > -distb.length()) ? dista : distb.scaleddist(-1f);
 		};
 	}
 
@@ -54,8 +54,8 @@ public class CombinedShapes {
 		}
 
 		@Override
-		public Distance negdist() {
-			return new BlendedMaterialDistance(-length, d1, d2, f);
+		public Distance scaleddist(float f) {
+			return new BlendedMaterialDistance(length * f, d1, d2, f);
 		}
 	}
 

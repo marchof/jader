@@ -1,5 +1,8 @@
 package jader.ui;
 
+import static jader.math.Trans3.rotdeg;
+import static jader.math.Trans3.scale;
+import static jader.math.Trans3.trans;
 import static jader.math.Vec3.vec3;
 import static jader.scene.Light.ambient;
 import static jader.scene.Light.point;
@@ -39,9 +42,14 @@ public class ExampleScenes {
 	}
 
 	public static Scene scene2() {
+		var box = box(vec3(0, 0.1, -0.3), vec3(0.1, 0.1, 0.3), 0.01f).with(Material.COOPER);
 		return standardSetting( //
-				box(vec3(-0.6, -0.15, -0.5), vec3(0.35, 0.35, 0.35), 0.05f).with(Material.DEFAULT), //
-				box(vec3(0.55, -0.35, 0.2), vec3(0.15, 0.15, 0.15), 0.05f).with(Material.DEFAULT));
+				box.transform(trans(0, -0.5, 0.5), rotdeg(0, 1, 0, -90), trans(0, 0, -0.5), scale(0.3)), //
+				box.transform(trans(0, -0.5, 0.5), rotdeg(0, 1, 0, -65), trans(0, 0, -0.5), scale(0.45)), //
+				box.transform(trans(0, -0.5, 0.5), rotdeg(0, 1, 0, -40), trans(0, 0, -0.5), scale(0.6)), //
+				box.transform(trans(0, -0.5, 0.5), rotdeg(0, 1, 0, -10), trans(0, 0, -0.5), scale(0.8)), //
+				box.transform(trans(0, -0.5, 0.5), rotdeg(0, 1, 0, +20), trans(0, 0, -0.5), scale(1.2)), //
+				box.transform(trans(0, -0.5, 0.5), rotdeg(0, 1, 0, +60), trans(0, 0, -0.5), scale(1.6)));
 	}
 
 	public static Scene scene3() {
