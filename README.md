@@ -20,10 +20,13 @@ The following [example scenes](src/main/java/jader/ui/ExampleScenes.java) show t
 
 ![Reflection](src/test/resources/referencescenes/scene1.png)
 
+### Primitive Shapes
+
+![Primitive Shapes](src/test/resources/referencescenes/scene2.png)
+
 ### Affine Transformations
 
-![Affine Transformations](src/test/resources/referencescenes/scene2.png)
-
+![Affine Transformations](src/test/resources/referencescenes/scene3.png)
 
 ### Boolean Operations: Intersection, Subtraction, Union
 
@@ -60,7 +63,6 @@ If you want to learn more about the algorithms use for 3D rendering with ray mar
 
 ## Ideas for Future Features
 
-* More primitive Shapes: Cylinder, Cone, Torus
 * Shape Repetition
 * Textures
 * Height Maps

@@ -16,6 +16,8 @@
 
 package jader.math;
 
+import static jader.math.Vec2.vec2;
+
 public record Vec3(float x, float y, float z) {
 
 	public static Vec3 vec3(float x, float y, float z) {
@@ -53,11 +55,11 @@ public record Vec3(float x, float y, float z) {
 		return new Vec3(this.x - other.x, this.y - other.y, this.z - other.z);
 	}
 
-	public Vec3 scl(float scalar) {
+	public Vec3 mul(float scalar) {
 		return new Vec3(this.x * scalar, this.y * scalar, this.z * scalar);
 	}
 
-	public Vec3 scl(Vec3 other) {
+	public Vec3 mul(Vec3 other) {
 		return new Vec3(x * other.x, y * other.y, z * other.z);
 	}
 
@@ -93,6 +95,18 @@ public record Vec3(float x, float y, float z) {
 				y * vector.z - z * vector.y, //
 				z * vector.x - x * vector.z, //
 				x * vector.y - y * vector.x);
+	}
+	
+	public Vec2 xy() {
+		return vec2(x, y);
+	}
+
+	public Vec2 xz() {
+		return vec2(x, z);
+	}
+	
+	public Vec2 yz() {
+		return vec2(y, z);
 	}
 	
 }

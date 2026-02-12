@@ -41,6 +41,34 @@ public final class SimpleShapes {
 		return box(center, size, 0.0f);
 	}
 
+	public static ShapeBuilder cylinder(Vec3 center, float radius, float height) {
+		return ShapeBuilder.of(p -> {
+			float dx = p.xz().dist(center.xz()) - radius;
+			float dy = abs(p.y() - center.y()) - height;
+			return min(max(dx, dy), 0f) + vec2(dx, dy).max(0f).len();
+		});
+	}
+
+	public static ShapeBuilder cone(Vec3 center, float radius, float height) {
+		return ShapeBuilder.of(p -> {
+			var pp = vec2(p.xz().dist(center.xz()) - radius, p.y() - center.y() + height);
+			var e = vec2(-radius, 2.0f * height);
+			var q = pp.mulSub(e, Math.clamp(pp.dot(e) / e.dot(e), 0.0f, 1.0f));
+			float d = q.len();
+			if (max(q.x(), q.y()) > 0.0) {
+				return d;
+			}
+			return -min(d, pp.y());
+		});
+	}
+
+	public static ShapeBuilder torus(Vec3 center, float r1, float r2) {
+		return ShapeBuilder.of(p -> {
+			var q = vec2(p.xz().dist(center.xz()) - r1, p.y() - center.y());
+			return q.len() - r2;
+		});
+	}
+
 	private static float absmod(float v, float m) {
 		var r = v % m;
 		if (r < 0) {

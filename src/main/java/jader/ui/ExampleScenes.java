@@ -16,7 +16,10 @@ import static jader.shape.CombinedShapes.union;
 import static jader.shape.Material.diffuse;
 import static jader.shape.Material.glossy;
 import static jader.shape.SimpleShapes.box;
+import static jader.shape.SimpleShapes.cone;
+import static jader.shape.SimpleShapes.cylinder;
 import static jader.shape.SimpleShapes.sphere;
+import static jader.shape.SimpleShapes.torus;
 import static jader.shape.Surface.grid;
 
 import java.util.List;
@@ -42,6 +45,16 @@ public class ExampleScenes {
 	}
 
 	public static Scene scene2() {
+		return standardSetting( //
+				box(vec3(-1.0, -0.3, -0.25), vec3(0.2, 0.2, 0.2), 0.02f).with(Material.BRASS), //
+				torus(vec3(0, 0, 0), 0.15f, 0.05f).with(Material.BRASS).transform(trans(-0.5, -0.3, -0.25),
+						rotdeg(1, 0, 0, 90)), //
+				cone(vec3(0.0, -0.3, -0.25), 0.2f, 0.2f).with(Material.BRASS), //
+				sphere(vec3(0.5, -0.3, -0.25), 0.2f).with(Material.BRASS), //
+				cylinder(vec3(1.0, -0.3, -0.25), 0.2f, 0.2f).with(Material.BRASS));
+	}
+
+	public static Scene scene3() {
 		var box = box(vec3(0, 0.1, -0.3), vec3(0.1, 0.1, 0.3), 0.01f).with(Material.COOPER);
 		return standardSetting( //
 				box.transform(trans(0, -0.5, 0.5), rotdeg(0, 1, 0, -90), trans(0, 0, -0.5), scale(0.3)), //
@@ -50,14 +63,6 @@ public class ExampleScenes {
 				box.transform(trans(0, -0.5, 0.5), rotdeg(0, 1, 0, -10), trans(0, 0, -0.5), scale(0.8)), //
 				box.transform(trans(0, -0.5, 0.5), rotdeg(0, 1, 0, +20), trans(0, 0, -0.5), scale(1.2)), //
 				box.transform(trans(0, -0.5, 0.5), rotdeg(0, 1, 0, +60), trans(0, 0, -0.5), scale(1.6)));
-	}
-
-	public static Scene scene3() {
-		return standardSetting( //
-				sphere(vec3(-0.3, -0.2, 0.4), 0.2f).with(diffuse(rgb(0, 0, 192))), //
-				subtract( //
-						box(vec3(0.0, -0.35, -0.1), vec3(0.80, 0.15, 0.50), 0.05f).with(diffuse(rgb(160, 0, 0))), //
-						sphere(vec3(0.3, -0.2, 0.4), 0.2f).with(diffuse(rgb(0, 0, 192)))));
 	}
 
 	public static Scene scene4() {
