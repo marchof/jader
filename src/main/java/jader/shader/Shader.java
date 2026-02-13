@@ -36,12 +36,12 @@ public class Shader {
 			return scene.background();
 		}
 
-		var color = Color.BLACK;
 		var material = hit.material();
 		var hitPoint = hit.hitPoint();
 		var hitNormal = hit.hitNormal();
 		var hoverHitPoint = RayMarch.hoverHitPoint(hitPoint, hitNormal);
 		var reflectionDirection = getReflection(viewDirection, hitNormal);
+		var color = material.emissiveColor();
 
 		// Lights:
 		for (var light : scene.lights()) {

@@ -9,16 +9,17 @@ public record Material(
 		Color diffuseColor, //
 		Color reflectiveColor, //
 		Color specularColor, //
+		Color emissiveColor, //
 		float shinyness
 
 ) {
 
 	public static Material diffuse(Color color) {
-		return new Material(color, BLACK, BLACK, 0);
+		return new Material(color, BLACK, BLACK, BLACK, 0);
 	}
 
 	public static Material glossy(Color color, float refletiveness, float specularness) {
-		return new Material(color, WHITE.mul(refletiveness), WHITE.mul(specularness), 32);
+		return new Material(color, WHITE.mul(refletiveness), WHITE.mul(specularness), BLACK, 32);
 	}
 
 	public static Material metal(Color color) {
@@ -26,7 +27,7 @@ public record Material(
 	}
 
 	public static Material metal(Color diffuseColor, Color reflectiveColor) {
-		return new Material(diffuseColor, reflectiveColor.mul(0.5f), reflectiveColor, 32);
+		return new Material(diffuseColor, reflectiveColor.mul(0.5f), reflectiveColor, BLACK, 32);
 	}
 	
 	public boolean isReflective() {
@@ -44,9 +45,13 @@ public record Material(
 				this.diffuseColor.blend(other.diffuseColor, f), //
 				this.reflectiveColor.blend(other.reflectiveColor, f), //
 				this.specularColor.blend(other.specularColor, f), //
+				this.emissiveColor.blend(other.emissiveColor, f), //
 				this.shinyness * (1.0f - f) + other.shinyness * f);
 	}
-
+	
+	public Material withEmissive(Color emissive) {
+		return new Material(diffuseColor, reflectiveColor, specularColor, emissive, shinyness);
+	}
 
 	public static final Material DEFAULT = diffuse(rgb(240, 240, 240));
 
