@@ -69,10 +69,12 @@ If you want to learn more about the algorithms use for 3D rendering with ray mar
 * Fog
 * Render Animations
 * UI with Viewpoint Interaction
+* UI with Animation Interaction
 * UI with Progressive Rendering
 * Optionally add performance info to rendered images
 * "3D Live Coding"
-
+* Point Light Decay
+* Spot Lights
 
 ## Credits
 
