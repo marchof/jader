@@ -18,10 +18,6 @@ public record RayMarch(
 	private static final float MIN_SURFACE_DIST = 0.000001f;
 	private static final int MAX_STEPS = 400;
 
-	private static final Vec3 DELTA_X = vec3(0.001f, 0f, 0f);
-	private static final Vec3 DELTA_Y = vec3(0f, 0.001f, 0f);
-	private static final Vec3 DELTA_Z = vec3(0f, 0f, 0.001f);
-
 	public static RayMarch from(Vec3 start, Vec3 direction, Shape shape, float maxMarchDistance) {
 
 		Shape.Distance closestDistance = null;
@@ -67,12 +63,25 @@ public record RayMarch(
 	public Material material() {
 		return closestDist.material();
 	}
+	
+	// Pre-calculated tetrahedron edges for normal calculation
+	private static final float TSIZE = 0.00001f;
+	private static final Vec3 T1 = vec3(TSIZE, -TSIZE, -TSIZE);
+	private static final Vec3 T2 = vec3(-TSIZE, -TSIZE, TSIZE);
+	private static final Vec3 T3 = vec3(-TSIZE, TSIZE, -TSIZE);
+	private static final Vec3 T4 = vec3(TSIZE, TSIZE, TSIZE);
 
 	public Vec3 hitNormal() {
-		var dX = hitPoint.add(DELTA_X);
-		var dY = hitPoint.add(DELTA_Y);
-		var dZ = hitPoint.add(DELTA_Z);
-		return vec3(shape.distance(dX).length(), shape.distance(dY).length(), shape.distance(dZ).length()).nor();
+		// Tetrahedron technique for smooth normals with 4 distance calculations
+		// as described in https://iquilezles.org/articles/normalsSDF/
+		var d1 = shape.distance(hitPoint.add(T1)).length();
+		var d2 = shape.distance(hitPoint.add(T2)).length();
+		var d3 = shape.distance(hitPoint.add(T3)).length();
+		var d4 = shape.distance(hitPoint.add(T4)).length();
+		return vec3( //
+				+d1 - d2 - d3 + d4, //
+				-d1 - d2 + d3 + d4, //
+				-d1 + d2 - d3 + d4).nor();
 	}
 
 	public static Vec3 hoverHitPoint(Vec3 hitPoint, Vec3 hitNormal) {
