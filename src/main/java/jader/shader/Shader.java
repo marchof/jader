@@ -12,7 +12,7 @@ public class Shader {
 	private static final int MAX_REFELECTION_COUNT = 16;
 
 	private static final int AO_STEPS = 5;
-	private static final float OA_DECAY = 0.9f;
+	private static final float AO_DECAY = 0.9f;
 
 	private final Scene scene;
 
@@ -36,11 +36,15 @@ public class Shader {
 			return scene.background();
 		}
 
-		var material = hit.material();
 		var hitPoint = hit.hitPoint();
-		var hitNormal = hit.hitNormal();
-		var hoverHitPoint = RayMarch.hoverHitPoint(hitPoint, hitNormal);
+		var material = hit.closestDist().material();
+		
+		var hitGeometry = SurfaceGeometry.calculate(scene.shape(), hitPoint);
+		var hitNormal = hitGeometry.normal();
+		var hitHoverPoint = hitGeometry.hover();
+		
 		var reflectionDirection = getReflection(viewDirection, hitNormal);
+		
 		var color = material.emissiveColor();
 
 		// Lights:
@@ -56,8 +60,8 @@ public class Shader {
 				break;
 			case Light.Point point:
 				var ln = point.position().direction(hitPoint);
-				var ld = hoverHitPoint.dist(point.position());
-				var rm = RayMarch.from(hoverHitPoint, ln, scene.shape(), ld);
+				var ld = hitHoverPoint.dist(point.position());
+				var rm = RayMarch.from(hitHoverPoint, ln, scene.shape(), ld);
 				if (!rm.isHit()) {
 					var blur = Math.min(1.0f, rm.distanceRatio() / (point.radius() / ld));
 					var diffuseFactor = hitNormal.dot(ln);
@@ -74,7 +78,7 @@ public class Shader {
 
 		// Reflections from the scene:
 		if (material.isReflective() && reflectionCount < MAX_REFELECTION_COUNT) {
-			var reflected = getColor(hoverHitPoint, reflectionDirection, reflectionCount + 1);
+			var reflected = getColor(hitHoverPoint, reflectionDirection, reflectionCount + 1);
 			color = color.mulAdd(material.reflectiveColor(), reflected);
 		}
 
@@ -94,7 +98,7 @@ public class Shader {
 			float dist = stepsize * i;
 			total += dist * f;
 			occ += (dist - shape.distance(hitPoint.mulAdd(hitNormal, dist)).length()) * f;
-			f *= OA_DECAY;
+			f *= AO_DECAY;
 		}
 		return 1.0f - ambient.oa() * occ / total;
 	}
