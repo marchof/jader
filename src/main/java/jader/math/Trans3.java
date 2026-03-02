@@ -5,11 +5,9 @@ import static jader.math.Vec3.vec3;
 import java.util.Arrays;
 import java.util.function.Function;
 
-/**
- * Description affine transformation composed from rotations, translations and
- * scalings. Note that non-uniform scaling is not possible with with SDFs as it
- * dilates spaces.
- */
+/// Description affine transformation composed from rotations, translations and
+/// scalings. Note that non-uniform scaling is not possible with with SDFs as it
+/// dilates spaces.
 public record Trans3( //
 		float m00, float m01, float m02, float m03, //
 		float m10, float m11, float m12, float m13, //

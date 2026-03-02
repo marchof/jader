@@ -3,10 +3,8 @@ package jader.shape;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-/**
- * Color in linear space for shading calculation. Conversion from/to RGB
- * includes gamma correction.
- */
+/// Color in linear space for shading calculation. Conversion from/to RGB
+/// includes gamma correction.
 public record Color(float red, float green, float blue) {
 
 	private static final double GAMMA = 2.2;
@@ -24,9 +22,7 @@ public record Color(float red, float green, float blue) {
 		return new Color(r, g, b);
 	}
 
-	/**
-	 * Creates a gamma corrected color instance from RGB values.
-	 */
+	/// Creates a gamma corrected color instance from RGB values.
 	public static Color rgb(int r, int g, int b) {
 		return new Color( //
 				(float) Math.pow(r / 255.0, GAMMA), //
@@ -76,9 +72,7 @@ public record Color(float red, float green, float blue) {
 				this.blue * nf + other.blue * f);
 	}
 
-	/**
-	 * Fills gamma corrected RGB components into the given array.
-	 */
+	/// Fills gamma corrected RGB components into the given array.
 	public void fillRGB(int[] components) {
 		components[0] = (int) (Math.pow(red, 1.0 / GAMMA) * 255f);
 		components[1] = (int) (Math.pow(green, 1.0 / GAMMA) * 255f);

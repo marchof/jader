@@ -8,18 +8,14 @@ import jader.shape.Shape.Distance;
 
 public record ShapeBuilder(SDF sdf, UVMapper mapper) {
 
-	/**
-	 * Signed distance function to describe the geometry of a shape.
-	 */
+	/// Signed distance function to describe the geometry of a shape.
 	public interface SDF {
 		float dist(Vec3 p);
 	}
 
-	/**
-	 * Maps point on the 3D surface of a shape to 2-dimensional point (u, v) with u
-	 * and v in the range [0, 1]. Used to apply {@link Surface} definitions on a
-	 * specific shape.
-	 */
+	/// Maps point on the 3D surface of a shape to 2-dimensional point (u, v) with u
+	/// and v in the range [0, 1]. Used to apply {@link Surface} definitions on a
+	/// specific shape.
 	public interface UVMapper {
 		Vec2 uv(Vec3 p);
 	}
@@ -54,7 +50,7 @@ public record ShapeBuilder(SDF sdf, UVMapper mapper) {
 		public Material material() {
 			return surface.material(uvMapper.uv(p));
 		}
-		
+
 		@Override
 		public Distance scaleddist(float f) {
 			return new SurfaceDistance(length * f, p, uvMapper, surface);

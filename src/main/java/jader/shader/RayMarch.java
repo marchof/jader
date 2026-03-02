@@ -3,9 +3,7 @@ package jader.shader;
 import jader.math.Vec3;
 import jader.shape.Shape;
 
-/**
- * The result of a ray marching operation.
- */
+/// The result of a ray marching operation.
 record RayMarch(
 
 		Vec3 hitPoint, //

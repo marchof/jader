@@ -7,9 +7,7 @@ import java.util.stream.IntStream;
 import jader.scene.Scene;
 import jader.shape.Color;
 
-/**
- * Fill raster image with rendered scenes.
- */
+/// Fill raster image with rendered scenes.
 public class Rasterer {
 		
 	private final int oversampling;
