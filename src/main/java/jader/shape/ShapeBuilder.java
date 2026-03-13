@@ -21,7 +21,7 @@ public record ShapeBuilder(SDF sdf, UVMapper mapper) {
 	}
 
 	public static ShapeBuilder of(SDF sdf) {
-		return of(sdf, p -> vec2(0, 0));
+		return of(sdf, _ -> vec2(0, 0));
 	}
 
 	public static ShapeBuilder of(SDF sdf, UVMapper mapper) {

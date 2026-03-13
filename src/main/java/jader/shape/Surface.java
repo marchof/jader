@@ -21,7 +21,7 @@ public interface Surface {
 	}
 	
 	public static Surface uniform(Material material) {
-		return p -> material;
+		return _ -> material;
 	}
 
 	public static Surface checker(Material m1, Material m2) {
