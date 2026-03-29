@@ -1,7 +1,6 @@
 package jader.shape;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
+import static java.lang.Math.clamp;
 
 /// Color in linear space for shading calculation. Conversion from/to RGB
 /// includes gamma correction.
@@ -13,9 +12,9 @@ public record Color(float red, float green, float blue) {
 	public static final Color WHITE = new Color(1.0f, 1.0f, 1.0f);
 
 	public Color {
-		red = min(max(red, 0f), 1f);
-		green = min(max(green, 0f), 1f);
-		blue = min(max(blue, 0f), 1f);
+		red = clamp(red, 0f, 1f);
+		green = clamp(green, 0f, 1f);
+		blue = clamp(blue, 0f, 1f);
 	}
 
 	public static Color color(float r, float g, float b) {
