@@ -1,5 +1,9 @@
 package jader.shape;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 import jader.math.Vec3;
 import jader.shape.Shape.Distance;
 
@@ -28,8 +32,8 @@ public class CombinedShapes {
 			var dist2 = shape2.distance(p);
 			float l1 = dist1.length();
 			float l2 = dist2.length();
-			float h = Math.max(k4 - Math.abs(l1 - l2), 0.0f);
-			var d = Math.min(l1, l2) - h * h * 0.25f / k4;
+			float h = max(k4 - abs(l1 - l2), 0.0f);
+			var d = min(l1, l2) - h * h * 0.25f / k4;
 			return new BlendedMaterialDistance(d, dist1, dist2, l1 / (l1 + l2));
 		};
 	}
@@ -41,8 +45,8 @@ public class CombinedShapes {
 			var dist2 = shape2.distance(p);
 			float l1 = -dist1.length();
 			float l2 = dist2.length();
-			float h = Math.max(k4 - Math.abs(l1 - l2), 0.0f);
-			var d = Math.min(l1, l2) - h * h * 0.25f / k4;
+			float h = max(k4 - abs(l1 - l2), 0.0f);
+			var d = min(l1, l2) - h * h * 0.25f / k4;
 			return new BlendedMaterialDistance(-d, dist1, dist2, l1 / (l1 + l2));
 		};
 	}

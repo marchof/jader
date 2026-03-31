@@ -1,9 +1,14 @@
 package jader.shape;
 
 import static jader.math.Vec2.vec2;
+import static java.lang.Math.PI;
 import static java.lang.Math.abs;
+import static java.lang.Math.acos;
+import static java.lang.Math.atan2;
+import static java.lang.Math.clamp;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static java.lang.Math.sqrt;
 
 import jader.math.Vec3;
 
@@ -18,8 +23,8 @@ public final class SimpleShapes {
 		return ShapeBuilder.of(p -> center.dist(p) - radius, //
 				p -> {
 					var r = p.sub(center);
-					return vec2((float) (Math.atan2(r.x(), r.z()) / (2 * Math.PI)) + 1f,
-							(float) ((1 + Math.acos(r.y()) / 2)));
+					return vec2((float) (atan2(r.x(), r.z()) / (2 * PI)) + 1f,
+							(float) ((1 + acos(r.y()) / 2)));
 				});
 	}
 
@@ -32,7 +37,7 @@ public final class SimpleShapes {
 			qx = max(0, qx);
 			qy = max(0, qy);
 			qz = max(0, qz);
-			var d2 = (float) Math.sqrt(qx * qx + qy * qy + qz * qz);
+			var d2 = (float) sqrt(qx * qx + qy * qy + qz * qz);
 			return d1 + d2 - radius;
 		});
 	}
@@ -45,7 +50,7 @@ public final class SimpleShapes {
 		return ShapeBuilder.of(p -> {
 			float dx = p.xz().dist(center.xz()) - radius;
 			float dy = abs(p.y() - center.y()) - height;
-			return min(max(dx, dy), 0f) + vec2(dx, dy).max(0f).len();
+			return min(max(dx, dy), 0f) + vec2(dx, dy).clampMax(0f).len();
 		});
 	}
 
@@ -53,7 +58,7 @@ public final class SimpleShapes {
 		return ShapeBuilder.of(p -> {
 			var pp = vec2(p.xz().dist(center.xz()) - radius, p.y() - center.y() + height);
 			var e = vec2(-radius, 2.0f * height);
-			var q = pp.mulSub(e, Math.clamp(pp.dot(e) / e.dot(e), 0.0f, 1.0f));
+			var q = pp.mulSub(e, clamp(pp.dot(e) / e.dot(e), 0.0f, 1.0f));
 			float d = q.len();
 			if (max(q.x(), q.y()) > 0.0) {
 				return d;

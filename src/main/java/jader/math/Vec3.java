@@ -1,6 +1,7 @@
 package jader.math;
 
 import static jader.math.Vec2.vec2;
+import static java.lang.Math.sqrt;
 
 public record Vec3(float x, float y, float z) {
 
@@ -28,7 +29,7 @@ public record Vec3(float x, float y, float z) {
 		float dx = x - to.x;
 		float dy = y - to.y;
 		float dz = z - to.z;
-		float len = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
+		float len = (float) sqrt(dx * dx + dy * dy + dz * dz);
 		if (len != 0) {
 			return new Vec3(dx / len, dy / len, dz / len);
 		}
@@ -56,7 +57,7 @@ public record Vec3(float x, float y, float z) {
 	}
 
 	public float len() {
-		return (float) Math.sqrt(x * x + y * y + z * z);
+		return (float) sqrt(x * x + y * y + z * z);
 	}
 
 	public float dist2(final Vec3 to) {
@@ -67,7 +68,7 @@ public record Vec3(float x, float y, float z) {
 	}
 
 	public float dist(Vec3 to) {
-		return (float) Math.sqrt(dist2(to));
+		return (float) sqrt(dist2(to));
 	}
 
 	public float dot(Vec3 vector) {

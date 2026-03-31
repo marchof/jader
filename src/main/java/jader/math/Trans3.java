@@ -1,6 +1,10 @@
 package jader.math;
 
 import static jader.math.Vec3.vec3;
+import static java.lang.Math.PI;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
 
 import java.util.Arrays;
 import java.util.function.Function;
@@ -38,7 +42,7 @@ public record Trans3( //
 	public static Trans3 rot(Vec3 axis, float rad) {
 		axis = axis.nor();
 		float x = axis.x(), y = axis.y(), z = axis.z();
-		float c = (float) Math.cos(rad), s = (float) Math.sin(rad), mc = 1.0f - c;
+		float c = (float) cos(rad), s = (float) sin(rad), mc = 1.0f - c;
 		return new Trans3( //
 				x * x * mc + c, //
 				x * y * mc + z * s, //
@@ -63,7 +67,7 @@ public record Trans3( //
 	}
 
 	public static Trans3 rotdeg(Vec3 axis, float deg) {
-		return rot(axis, (float) (deg * Math.PI / 180.0f));
+		return rot(axis, (float) (deg * PI / 180.0f));
 	}
 
 	public static Trans3 trans(float x, float y, float z) {
@@ -93,7 +97,7 @@ public record Trans3( //
 	}
 
 	public float getScale() {
-		return (float) Math.sqrt(m00 * m00 + m10 * m10 + m20 * m20);
+		return (float) sqrt(m00 * m00 + m10 * m10 + m20 * m20);
 	}
 
 	@Override

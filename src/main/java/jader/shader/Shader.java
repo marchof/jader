@@ -1,5 +1,9 @@
 package jader.shader;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.min;
+import static java.lang.Math.pow;
+
 import jader.math.Vec3;
 import jader.scene.Light;
 import jader.scene.Scene;
@@ -63,11 +67,11 @@ public class Shader {
 				var ld = hitHoverPoint.dist(point.position());
 				var rm = RayMarch.from(hitHoverPoint, ln, scene.shape(), ld);
 				if (!rm.isHit()) {
-					var blur = Math.min(1.0f, rm.distanceRatio() / (point.radius() / ld));
+					var blur = min(1.0f, rm.distanceRatio() / (point.radius() / ld));
 					var diffuseFactor = hitNormal.dot(ln);
 					color = color.mulAdd(material.diffuseColor(), point.color(), diffuseFactor * blur);
 					if (material.specularColor().isNonBlack()) {
-						var specularFactor = (float) Math.pow(Math.abs(reflectionDirection.dot(ln)),
+						var specularFactor = (float) pow(abs(reflectionDirection.dot(ln)),
 								material.shinyness());
 						color = color.mulAdd(material.specularColor(), point.color(), specularFactor * blur);
 					}

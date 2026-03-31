@@ -1,5 +1,8 @@
 package jader.math;
 
+import static java.lang.Math.max;
+import static java.lang.Math.sqrt;
+
 public record Vec2(float x, float y) {
 
 	public static Vec2 vec2(float x, float y) {
@@ -7,7 +10,7 @@ public record Vec2(float x, float y) {
 	}
 
 	public float len() {
-		return (float) Math.sqrt(x * x + y * y);
+		return (float) sqrt(x * x + y * y);
 	}
 
 	public float dot(Vec2 other) {
@@ -37,11 +40,11 @@ public record Vec2(float x, float y) {
 	}
 
 	public float dist(Vec2 to) {
-		return (float) Math.sqrt(dist2(to));
+		return (float) sqrt(dist2(to));
 	}
 
-	public Vec2 max(float limit) {
-		return new Vec2(Math.max(x, limit), Math.max(y, limit));
+	public Vec2 clampMax(float max) {
+		return new Vec2(max(x, max), max(y, max));
 	}
 
 }
