@@ -15,7 +15,7 @@ import jader.shape.Material;
 public class Shader {
 
 	private static final float MAX_MARCH_DIST = 20f;
-	private static final int MAX_REFELECTION_COUNT = 16;
+	private static final int MAX_REFLECTION_COUNT = 16;
 
 	private static final int AO_STEPS = 5;
 	private static final float AO_DECAY = 0.9f;
@@ -67,7 +67,7 @@ public class Shader {
 		}
 
 		// Reflections from the scene:
-		if (material.isReflective() && reflectionCount < MAX_REFELECTION_COUNT) {
+		if (material.isReflective() && reflectionCount < MAX_REFLECTION_COUNT) {
 			var reflected = getColor(hitHoverPoint, reflectionDirection, reflectionCount + 1);
 			color = color.mulAdd(material.reflectiveColor(), reflected);
 		}
@@ -95,7 +95,7 @@ public class Shader {
 			var diffuseFactor = hitNormal.dot(ln);
 			color = color.mulAdd(material.diffuseColor(), point.color(), diffuseFactor * blur);
 			if (material.specularColor().isNonBlack()) {
-				var specularFactor = (float) pow(abs(reflectionDirection.dot(ln)), material.shinyness());
+				var specularFactor = (float) pow(abs(reflectionDirection.dot(ln)), material.shininess());
 				color = color.mulAdd(material.specularColor(), point.color(), specularFactor * blur);
 			}
 		}
@@ -117,14 +117,14 @@ public class Shader {
 			occ += (dist - scene.shape().distance(hitPoint.mulAdd(hitNormal, dist)).length()) * f;
 			f *= AO_DECAY;
 		}
-		return 1.0f - ambient.oa() * occ / total;
+		return 1.0f - ambient.ao() * occ / total;
 	}
 
 	private Vec3 screenToDirection(float x, float y, float width, float height) {
 		var cam = scene.camera();
 		var ratio = width / height;
-		var ux = (x / width - 0.5f) * ratio / cam.f();
-		var uy = (-y / height + 0.5f) / cam.f();
+		var ux = (x / width - 0.5f) * ratio / cam.focalLength();
+		var uy = (-y / height + 0.5f) / cam.focalLength();
 		return cam.direction().mulAdd(cam.right(), ux).mulAdd(cam.up(), uy).nor();
 	}
 

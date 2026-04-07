@@ -6,11 +6,11 @@ import jader.shape.Shape;
 /// The result of a ray marching operation.
 sealed interface RayMarch {
 
-	/// Successful ray march that hit a surface.
+	/// Successful ray march that hits a surface.
 	record Hit(Vec3 point, Shape.Distance distance) implements RayMarch {
 	}
 
-	/// Ray march that exceeded maximum distance without hitting.
+	/// Ray march that exceeds the maximum distance without a hit.
 	record Miss(float distanceRatio) implements RayMarch {
 	}
 

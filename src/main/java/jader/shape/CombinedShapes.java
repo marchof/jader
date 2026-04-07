@@ -21,7 +21,7 @@ public class CombinedShapes {
 		return p -> {
 			var dista = a.distance(p);
 			var distb = b.distance(p);
-			return (dista.length() > -distb.length()) ? dista : distb.scaleddist(-1f);
+			return (dista.length() > -distb.length()) ? dista : distb.scaledDistance(-1f);
 		};
 	}
 
@@ -58,14 +58,14 @@ public class CombinedShapes {
 		}
 
 		@Override
-		public Distance scaleddist(float f) {
+		public Distance scaledDistance(float f) {
 			return new BlendedMaterialDistance(length * f, d1, d2, f);
 		}
 	}
 
-	// While the following methods could be nicely implements with streams, the
-	// performance drawback is too big for this critical path operations. Therefore
-	// we use these allocation free implementations.
+	// While the following methods could be nicely implemented with streams, the
+	// performance drawback is too large for these critical-path operations.
+	// Therefore, we use these allocation-free implementations.
 
 	private static Distance minSDF(Vec3 p, Shape... shapes) {
 		var mindist = Float.MAX_VALUE;

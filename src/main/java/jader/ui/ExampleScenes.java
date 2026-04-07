@@ -41,7 +41,7 @@ public class ExampleScenes {
 								.scale(32f, 32f)), //
 				sphere(vec3(0.3, 0.2, -0.4), 0.7f) //
 						.with(glossy(rgb(10, 10, 10), 0.8f, 0.8f)), //
-				box(vec3(0.4, -0.4, 0.4), vec3(0.3, 0.1, 0.3), 0.04f).with(Material.COOPER));
+				box(vec3(0.4, -0.4, 0.4), vec3(0.3, 0.1, 0.3), 0.04f).with(Material.COPPER));
 	}
 
 	public static Scene scene2() {
@@ -55,7 +55,7 @@ public class ExampleScenes {
 	}
 
 	public static Scene scene3() {
-		var box = box(vec3(0, 0.1, -0.3), vec3(0.1, 0.1, 0.3), 0.01f).with(Material.COOPER);
+		var box = box(vec3(0, 0.1, -0.3), vec3(0.1, 0.1, 0.3), 0.01f).with(Material.COPPER);
 		return standardSetting( //
 				box.transform(trans(0, -0.5, 0.5), rotdeg(0, 1, 0, -90), trans(0, 0, -0.5), scale(0.3)), //
 				box.transform(trans(0, -0.5, 0.5), rotdeg(0, 1, 0, -65), trans(0, 0, -0.5), scale(0.45)), //

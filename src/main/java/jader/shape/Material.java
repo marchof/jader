@@ -10,7 +10,7 @@ public record Material(
 		Color reflectiveColor, //
 		Color specularColor, //
 		Color emissiveColor, //
-		float shinyness
+		float shininess
 
 ) {
 
@@ -18,8 +18,8 @@ public record Material(
 		return new Material(color, BLACK, BLACK, BLACK, 0);
 	}
 
-	public static Material glossy(Color color, float refletiveness, float specularness) {
-		return new Material(color, WHITE.mul(refletiveness), WHITE.mul(specularness), BLACK, 32);
+	public static Material glossy(Color color, float reflectiveness, float specularness) {
+		return new Material(color, WHITE.mul(reflectiveness), WHITE.mul(specularness), BLACK, 32);
 	}
 
 	public static Material metal(Color color) {
@@ -46,11 +46,11 @@ public record Material(
 				this.reflectiveColor.blend(other.reflectiveColor, f), //
 				this.specularColor.blend(other.specularColor, f), //
 				this.emissiveColor.blend(other.emissiveColor, f), //
-				this.shinyness * (1.0f - f) + other.shinyness * f);
+				this.shininess * (1.0f - f) + other.shininess * f);
 	}
 	
 	public Material withEmissive(Color emissive) {
-		return new Material(diffuseColor, reflectiveColor, specularColor, emissive, shinyness);
+		return new Material(diffuseColor, reflectiveColor, specularColor, emissive, shininess);
 	}
 
 	public static final Material DEFAULT = diffuse(rgb(240, 240, 240));
@@ -61,7 +61,7 @@ public record Material(
 
 	public static final Material BRASS = metal(rgb(245, 228, 174), rgb(255, 252, 237));
 
-	public static final Material COOPER = metal(rgb(248, 207, 191), rgb(258, 244, 236));
+	public static final Material COPPER = metal(rgb(248, 207, 191), rgb(258, 244, 236));
 
 	public static final Material GOLD = metal(rgb(262, 228, 151), rgb(258, 254, 221));
 

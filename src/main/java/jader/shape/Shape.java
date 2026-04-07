@@ -3,18 +3,18 @@ package jader.shape;
 import jader.math.Trans3;
 import jader.math.Vec3;
 
-/// A shape is defined by a Signed Distance Function (SDF).
+/// A shape is defined by a signed distance function (SDF).
 public interface Shape {
 
-	/// A distance describes the shortest distance to a shape and the material at
-	/// that closest point of the shape.
+	/// A distance describes the shortest distance to the shape and the material at
+	/// the closest point on the surface.
 	interface Distance {
 
 		float length();
 
 		Material material();
 
-		Distance scaleddist(float f);
+		Distance scaledDistance(float f);
 
 	}
 
@@ -25,7 +25,7 @@ public interface Shape {
 		var t = Trans3.of(transformations);
 		var inv = t.inverse();
 		var scale = t.getScale();
-		return p -> this.distance(inv.apply(p)).scaleddist(scale);
+		return p -> this.distance(inv.apply(p)).scaledDistance(scale);
 	}
 
 }

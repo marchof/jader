@@ -9,7 +9,7 @@ import static java.lang.Math.sqrt;
 import java.util.Arrays;
 import java.util.function.Function;
 
-/// Description affine transformation composed from rotations, translations and
+/// Description of a affine transformation composed from rotations, translations and
 /// scalings. Note that non-uniform scaling is not possible with with SDFs as it
 /// dilates spaces.
 public record Trans3( //
@@ -58,12 +58,12 @@ public record Trans3( //
 				0);
 	}
 
-	public static Trans3 rotdeg(float x, float y, float z, float rad) {
-		return rotdeg(vec3(x, y, z), rad);
+	public static Trans3 rotdeg(float x, float y, float z, float deg) {
+		return rotdeg(vec3(x, y, z), deg);
 	}
 
-	public static Trans3 rotdeg(double x, double y, double z, float rad) {
-		return rotdeg(vec3(x, y, z), rad);
+	public static Trans3 rotdeg(double x, double y, double z, float deg) {
+		return rotdeg(vec3(x, y, z), deg);
 	}
 
 	public static Trans3 rotdeg(Vec3 axis, float deg) {

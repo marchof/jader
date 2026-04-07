@@ -30,7 +30,7 @@ public class MaterialGallery {
 	
 	private static final Path EXPORT_FOLDER = Path.of("target/export/materials");
 
-	private static Scene getSzene(Material material) {
+	private static Scene getScene(Material material) {
 		return new Scene( //
 				union( //
 						SimpleShapes.planeXZ(-0.3f).with(Surface.grid(0.05f, Material.diffuse(Color.BLACK), Material.diffuse(Color.rgb(96, 96, 96))).scale(5, 5)), //
@@ -46,20 +46,20 @@ public class MaterialGallery {
 
 	private static BufferedImage render(Material material) {
 		var rasterer = new Rasterer(OVERSAMPLING, true);
-		return rasterer.render(getSzene(material), WIDTH, HEIGHT);
+		return rasterer.render(getScene(material), WIDTH, HEIGHT);
 	}
 
-	private static void exportSzene(Material material, String file) throws IOException {
+	private static void exportScene(Material material, String file) throws IOException {
 		ImageIO.write(render(material), "png", EXPORT_FOLDER.resolve(file).toFile());
 	}
 
 	public static void main(String[] args) throws IOException {
 		Files.createDirectories(EXPORT_FOLDER);
-		exportSzene(Material.ALUMINIUM, "material-aluminium.png");
-		exportSzene(Material.BRASS, "material-brass.png");
-		exportSzene(Material.COOPER, "material-cooper.png");
-		exportSzene(Material.GOLD, "material-gold.png");
-		exportSzene(Material.SILVER, "material-silver.png");
+		exportScene(Material.ALUMINIUM, "material-aluminium.png");
+		exportScene(Material.BRASS, "material-brass.png");
+		exportScene(Material.COPPER, "material-copper.png");
+		exportScene(Material.GOLD, "material-gold.png");
+		exportScene(Material.SILVER, "material-silver.png");
 	}
 
 }

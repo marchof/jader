@@ -5,14 +5,14 @@ import jader.shape.Color;
 
 public sealed interface Light {
 
-	public record Ambient(Color color, float oa, float aoRange) implements Light {
+	public record Ambient(Color color, float ao, float aoRange) implements Light {
 		
 		public boolean hasAO() {
-			return oa > 0.0f;
+			return ao > 0.0f;
 		}
 		
-		public Ambient withAO(float oa, float oaRange) {
-			return new Ambient(color, oa, oaRange);
+		public Ambient withAO(float ao, float aoRange) {
+			return new Ambient(color, ao, aoRange);
 		}
 		
 	}
