@@ -4,17 +4,19 @@ import jader.math.Vec3;
 import jader.shape.Shape;
 
 /// The result of a ray marching operation.
-record RayMarch(
+sealed interface RayMarch {
 
-		Vec3 hitPoint, //
-		float distanceRatio, //
-		Shape.Distance closestDist
+	/// Successful ray march that hit a surface.
+	record Hit(Vec3 point, Shape.Distance distance) implements RayMarch {
+	}
 
-) {
+	/// Ray march that exceeded maximum distance without hitting.
+	record Miss(float distanceRatio) implements RayMarch {
+	}
 
 	static final float MIN_SURFACE_DIST = 0.000001f;
 
-	private static final int MAX_STEPS = 400;
+	static final int MAX_STEPS = 400;
 
 	public static RayMarch from(Vec3 start, Vec3 direction, Shape shape, float maxMarchDistance) {
 
@@ -43,16 +45,12 @@ record RayMarch(
 				}
 			}
 			if (len < MIN_SURFACE_DIST || steps > MAX_STEPS) {
-				return new RayMarch(p, minDistanceRatio, closestDistance);
+				return new Hit(p, closestDistance);
 			}
 			if ((marchDist += len) > maxMarchDistance) {
-				return new RayMarch(null, minDistanceRatio, null);
+				return new Miss(minDistanceRatio);
 			}
 		}
-	}
-
-	public boolean isHit() {
-		return hitPoint != null;
 	}
 
 }
