@@ -14,21 +14,7 @@ public interface Shape {
 
 		Material material();
 
-		default Distance scaleddist(float f) {
-			var delegate = this;
-			var dist = delegate.length() * f;
-			return new Distance() {
-
-				public Material material() {
-					return delegate.material();
-				}
-
-				@Override
-				public float length() {
-					return dist;
-				}
-			};
-		}
+		Distance scaleddist(float f);
 
 	}
 
