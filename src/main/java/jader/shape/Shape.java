@@ -10,11 +10,15 @@ public interface Shape {
 	/// the closest point on the surface.
 	interface Distance {
 
+		/// The length to the closest point.
 		float length();
 
+		/// The material at the closest point. This operation might be expensive
+		/// and should only be called the the material is actually needed.
 		Material material();
 
-		Distance scaledDistance(float f);
+		/// Returns a copy of the distance with the given length.
+		Distance withLength(float l);
 
 	}
 
@@ -25,7 +29,10 @@ public interface Shape {
 		var t = Trans3.of(transformations);
 		var inv = t.inverse();
 		var scale = t.getScale();
-		return p -> this.distance(inv.apply(p)).scaledDistance(scale);
+		return p -> {
+			var d = this.distance(inv.apply(p));
+			return d.withLength(d.length() * scale);
+		};
 	}
 
 }

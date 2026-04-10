@@ -39,8 +39,8 @@ public record ShapeBuilder(SDF sdf, UVMapper mapper) {
 	private static record MaterialDistance(float length, Material material) implements Shape.Distance {
 
 		@Override
-		public Distance scaledDistance(float f) {
-			return new MaterialDistance(length * f, material);
+		public Distance withLength(float l) {
+			return new MaterialDistance(l, material);
 		}
 	}
 
@@ -52,8 +52,8 @@ public record ShapeBuilder(SDF sdf, UVMapper mapper) {
 		}
 
 		@Override
-		public Distance scaledDistance(float f) {
-			return new SurfaceDistance(length * f, p, uvMapper, surface);
+		public Distance withLength(float l) {
+			return new SurfaceDistance(l, p, uvMapper, surface);
 		}
 	}
 
