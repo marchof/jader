@@ -25,10 +25,14 @@ public interface Shape {
 	/// Returns the closest distance to the shape from the given point.
 	Distance distance(Vec3 p);
 
+	/// Applies the given transformations to the shape
 	default Shape transform(Trans3... transformations) {
 		var t = Trans3.of(transformations);
 		var inv = t.inverse();
 		var scale = t.getScale();
+		if (Math.abs(1.0f - scale) < 0.0001) {
+			return p -> this.distance(inv.apply(p));
+		}
 		return p -> {
 			var d = this.distance(inv.apply(p));
 			return d.withLength(d.length() * scale);
