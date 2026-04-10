@@ -17,6 +17,14 @@ public record Vec2(float x, float y) {
 		return x * other.x + y * other.y;
 	}
 
+	public Vec2 add(float x, float y) {
+		return new Vec2(this.x + x, this.y + y);
+	}
+
+	public Vec2 add(Vec2 other) {
+		return new Vec2(this.x + other.x, this.y + other.y);
+	}
+	
 	public Vec2 sub(Vec2 other) {
 		return new Vec2(this.x - other.x, this.y - other.y);
 	}
@@ -24,7 +32,11 @@ public record Vec2(float x, float y) {
 	public Vec2 mul(float scalar) {
 		return new Vec2(this.x * scalar, this.y * scalar);
 	}
-	
+
+	public Vec2 mul(Vec2 other) {
+		return new Vec2(this.x * other.x, this.y * other.y);
+	}
+
 	public Vec2 mulAdd(Vec2 vec, float scalar) {
 		return new Vec2(this.x + vec.x * scalar, this.y + vec.y * scalar);
 	}
