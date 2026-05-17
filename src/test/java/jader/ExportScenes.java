@@ -10,8 +10,8 @@ import jader.ui.Exporter;
 
 public class ExportScenes {
 
-	static final int WIDTH = 480;
-	static final int HEIGHT = 320;
+	static final int WIDTH = 640;
+	static final int HEIGHT = 360;
 
 	static final Path OUTPUT_FOLDER = Path.of("target/export/referencescenes");
 
