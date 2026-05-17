@@ -7,7 +7,7 @@ import java.time.Instant;
 public record PerfInfo(Duration duration, long allocatedBytes) {
 
 	public static PerfInfo run(Runnable subject, int warmupExecutions) {
-		for (int i = 0; i < warmupExecutions; i++) {
+		for (var i = 0; i < warmupExecutions; i++) {
 			subject.run();
 		}
 		var threadMXBean = (com.sun.management.ThreadMXBean) ManagementFactory.getThreadMXBean();

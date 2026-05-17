@@ -21,7 +21,7 @@ public class CombinedShapes {
 		return p -> {
 			var dista = a.distance(p);
 			var distb = b.distance(p);
-			float lb = distb.length();
+			var lb = distb.length();
 			return (dista.length() > -lb) ? dista : distb.withLength(-lb);
 		};
 	}
@@ -31,9 +31,9 @@ public class CombinedShapes {
 		return p -> {
 			var dist1 = shape1.distance(p);
 			var dist2 = shape2.distance(p);
-			float l1 = dist1.length();
-			float l2 = dist2.length();
-			float h = max(k4 - abs(l1 - l2), 0.0f);
+			var l1 = dist1.length();
+			var l2 = dist2.length();
+			var h = max(k4 - abs(l1 - l2), 0.0f);
 			var d = min(l1, l2) - h * h * 0.25f / k4;
 			return new BlendedMaterialDistance(d, dist1, dist2, l1 / (l1 + l2));
 		};
@@ -44,9 +44,9 @@ public class CombinedShapes {
 		return p -> {
 			var dist1 = shape1.distance(p);
 			var dist2 = shape2.distance(p);
-			float l1 = -dist1.length();
-			float l2 = dist2.length();
-			float h = max(k4 - abs(l1 - l2), 0.0f);
+			var l1 = -dist1.length();
+			var l2 = dist2.length();
+			var h = max(k4 - abs(l1 - l2), 0.0f);
 			var d = min(l1, l2) - h * h * 0.25f / k4;
 			return new BlendedMaterialDistance(-d, dist1, dist2, l1 / (l1 + l2));
 		};

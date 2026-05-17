@@ -40,7 +40,7 @@ public class UI {
 
 			@Override
 			public void paint(Graphics g) {
-				Graphics2D g2d = (Graphics2D) g;
+				var g2d = (Graphics2D) g;
 				var buffer = getBuffer(this.getWidth() * HIDPI_FACTOR, this.getHeight() * HIDPI_FACTOR);
 				var start = now();
 				rasterer.render(scene, buffer.getRaster());

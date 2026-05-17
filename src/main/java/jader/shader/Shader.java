@@ -77,7 +77,7 @@ public class Shader {
 
 	private Color applyAmbientOcclusionLight(Light.Ambient ambient, Material material, Color color, Vec3 hitPoint,
 			Vec3 hitNormal) {
-		float ao = getAmbientOcclusion(ambient, hitPoint, hitNormal);
+		var ao = getAmbientOcclusion(ambient, hitPoint, hitNormal);
 		return color.mulAdd(material.diffuseColor(), ambient.color(), ao);
 	}
 
@@ -107,12 +107,12 @@ public class Shader {
 	}
 
 	private float getAmbientOcclusion(Light.Ambient ambient, Vec3 hitPoint, Vec3 hitNormal) {
-		float stepsize = ambient.aoRange() / AO_STEPS;
-		float occ = 0.0f;
-		float total = 0.0f;
-		float f = 1.0f;
-		for (int i = 1; i <= AO_STEPS; ++i) {
-			float dist = stepsize * i;
+		var stepsize = ambient.aoRange() / AO_STEPS;
+		var occ = 0.0f;
+		var total = 0.0f;
+		var f = 1.0f;
+		for (var i = 1; i <= AO_STEPS; ++i) {
+			var dist = stepsize * i;
 			total += dist * f;
 			occ += (dist - scene.shape().distance(hitPoint.mulAdd(hitNormal, dist)).length()) * f;
 			f *= AO_DECAY;

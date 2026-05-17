@@ -48,8 +48,8 @@ public final class SimpleShapes {
 
 	public static ShapeBuilder cylinder(Vec3 center, float radius, float height) {
 		return ShapeBuilder.of(p -> {
-			float dx = p.xz().dist(center.xz()) - radius;
-			float dy = abs(p.y() - center.y()) - height;
+			var dx = p.xz().dist(center.xz()) - radius;
+			var dy = abs(p.y() - center.y()) - height;
 			return min(max(dx, dy), 0f) + vec2(dx, dy).clampMax(0f).len();
 		});
 	}
@@ -59,7 +59,7 @@ public final class SimpleShapes {
 			var pp = vec2(p.xz().dist(center.xz()) - radius, p.y() - center.y() + height);
 			var e = vec2(-radius, 2.0f * height);
 			var q = pp.mulSub(e, clamp(pp.dot(e) / e.dot(e), 0.0f, 1.0f));
-			float d = q.len();
+			var d = q.len();
 			if (max(q.x(), q.y()) > 0.0) {
 				return d;
 			}
