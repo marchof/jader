@@ -29,7 +29,7 @@ public class UI {
 	public void start() {
 		var frame = new JFrame("Jader");
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		frame.setSize(640, 480);
+		frame.setSize(640, 400);
 		frame.getContentPane().add(createShaderPanel(frame::setTitle));
 		frame.setVisible(true);
 	}

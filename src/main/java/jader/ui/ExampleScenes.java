@@ -47,12 +47,12 @@ public class ExampleScenes {
 
 	public static Scene scene2() {
 		return standardSetting( //
-				box(vec3(-1.0, -0.3, -0.25), vec3(0.2, 0.2, 0.2), 0.02f).with(Material.BRASS), //
-				torus(vec3(0, 0, 0), 0.15f, 0.05f).with(Material.BRASS).transform(trans(-0.5, -0.3, -0.25),
+				box(vec3(-1.0, -0.3, 0.25), vec3(0.2, 0.2, 0.2), 0.02f).with(Material.BRASS), //
+				torus(vec3(0, 0, 0), 0.15f, 0.05f).with(Material.BRASS).transform(trans(-0.5, -0.3, 0.25),
 						rotdeg(1, 0, 0, 90)), //
-				cone(vec3(0.0, -0.3, -0.25), 0.2f, 0.2f).with(Material.BRASS), //
-				sphere(vec3(0.5, -0.3, -0.25), 0.2f).with(Material.BRASS), //
-				cylinder(vec3(1.0, -0.3, -0.25), 0.2f, 0.2f).with(Material.BRASS));
+				cone(vec3(0.0, -0.3, 0.25), 0.2f, 0.2f).with(Material.BRASS), //
+				sphere(vec3(0.5, -0.3, 0.25), 0.2f).with(Material.BRASS), //
+				cylinder(vec3(1.0, -0.3, 0.25), 0.2f, 0.2f).with(Material.BRASS));
 	}
 
 	public static Scene scene3() {
