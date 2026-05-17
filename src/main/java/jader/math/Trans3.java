@@ -5,8 +5,8 @@ import static java.lang.Math.PI;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
+import static java.util.Arrays.stream;
 
-import java.util.Arrays;
 import java.util.function.Function;
 
 /// Description of a affine transformation composed from rotations, translations and
@@ -28,7 +28,9 @@ public record Trans3( //
 	}
 
 	public static Trans3 of(final Trans3... transformations) {
-		return Arrays.stream(transformations).reduce(Trans3.identity(), Trans3::mul);
+		// Transformations are only combined during initial scene building
+		// so we can accept the overhead of streams here for a concise syntax.
+		return stream(transformations).reduce(identity(), Trans3::mul);
 	}
 
 	public static Trans3 rot(float x, float y, float z, float rad) {
