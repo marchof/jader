@@ -38,9 +38,11 @@ public class Shader {
 
 	private Color getColor(Vec3 start, Vec3 viewDirection, int reflectionCount) {
 		var rm = RayMarch.from(start, viewDirection, scene.shape(), MAX_MARCH_DIST);
+		var env = scene.environment();
 		return switch (rm) {
-		case Hit hit -> getColor(viewDirection, hit.point(), hit.distance().material(), reflectionCount);
-		case Miss _ -> scene.background();
+		case Hit hit -> env.getColor(getColor(viewDirection, hit.point(), hit.distance().material(), reflectionCount),
+				start.dist(hit.point()));
+		case Miss _ -> env.getColor(null, 0);
 		};
 	}
 

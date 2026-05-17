@@ -1,6 +1,7 @@
 package jader.ui;
 
 import static jader.math.Vec3.vec3;
+import static jader.scene.Environment.fog;
 import static jader.scene.Light.ambient;
 import static jader.scene.Light.point;
 import static jader.shape.Color.rgb;
@@ -41,7 +42,7 @@ public class MaterialGallery {
 						point(vec3(-2, 5, 0), 1.0f), //
 						point(vec3(5, 5, -2), 1.0f)), //
 				Camera.direction(vec3(0, 0, -0.75), vec3(0, 0, 1)), //
-				Color.BLACK);
+				fog(Color.BLACK, 10.0f, 20.0f));
 	}
 
 	private static BufferedImage render(Material material) {

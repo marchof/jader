@@ -4,6 +4,7 @@ import static jader.math.Trans3.rotdeg;
 import static jader.math.Trans3.scale;
 import static jader.math.Trans3.trans;
 import static jader.math.Vec3.vec3;
+import static jader.scene.Environment.fog;
 import static jader.scene.Light.ambient;
 import static jader.scene.Light.point;
 import static jader.shape.Color.BLACK;
@@ -118,7 +119,7 @@ public class ExampleScenes {
 						point(vec3(-5, 5, -4), rgb(200, 200, 200), 1.0f), //
 						point(vec3(5, 5, 2), rgb(128, 128, 128), 1.0f)), //
 				Camera.direction(vec3(0, 0, 2), vec3(0, 0, -1)), //
-				Color.WHITE);
+				fog(Color.WHITE, 10.0f, 20.0f));
 	}
 
 	private static Scene standardSetting(Shape... shapes) {
@@ -132,7 +133,7 @@ public class ExampleScenes {
 						point(vec3(-5, 5, 2), 0.6f), //
 						point(vec3(5, 5, 2), 0.6f)), //
 				Camera.direction(vec3(0, 0, 2), vec3(0, 0, -1)), //
-				Color.WHITE);
+				fog(Color.WHITE, 10.0f, 20.0f));
 	}
 
 	private static Shape[] concat(Shape shape1, Shape... moreshapes) {

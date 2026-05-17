@@ -66,7 +66,6 @@ If you want to learn more about the algorithms use for 3D rendering with ray mar
 * Shape Repetition
 * Textures
 * Height Maps
-* Fog
 * Render Animations
 * UI with Viewpoint Interaction
 * UI with Animation Interaction
