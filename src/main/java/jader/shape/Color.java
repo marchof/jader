@@ -24,10 +24,7 @@ public record Color(float red, float green, float blue) {
 
 	/// Creates a gamma-corrected color instance from RGB values.
 	public static Color rgb(int r, int g, int b) {
-		return new Color( //
-				(float) pow(r / 255.0, GAMMA), //
-				(float) pow(g / 255.0, GAMMA), //
-				(float) pow(b / 255.0, GAMMA));
+		return new Color(decode(r), decode(g), decode(b));
 	}
 
 	public boolean isNonBlack() {
@@ -67,11 +64,17 @@ public record Color(float red, float green, float blue) {
 				this.blue * nf + other.blue * f);
 	}
 
-	/// Fills gamma-corrected RGB components into the given array.
-	public void fillRGB(int[] components) {
-		components[0] = (int) (pow(red, 1.0 / GAMMA) * 255f);
-		components[1] = (int) (pow(green, 1.0 / GAMMA) * 255f);
-		components[2] = (int) (pow(blue, 1.0 / GAMMA) * 255f);
+	/// Returns the gamma-corrected 8-bit RGB components encoded in an {@code int}. 
+	public int toRGB() {
+		return encode(red) << 16 | encode(green) << 8 | encode(blue);
+	}
+	
+	private static float decode(int component) {
+		return (float) pow(component / 255.0, GAMMA);
+	}
+
+	private static int encode(float value) {
+		return (int) (pow(value, 1.0 / GAMMA) * 255f);
 	}
 
 }

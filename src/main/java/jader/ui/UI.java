@@ -43,7 +43,7 @@ public class UI {
 				var g2d = (Graphics2D) g;
 				var buffer = getBuffer(this.getWidth() * HIDPI_FACTOR, this.getHeight() * HIDPI_FACTOR);
 				var start = now();
-				rasterer.render(scene, buffer.getRaster());
+				rasterer.render(scene, buffer);
 				var info = "Jader - %sx%spx %sms".formatted(buffer.getWidth(), buffer.getHeight(),
 						Duration.between(start, now()).toMillis());
 				frameinfo.accept(info);
