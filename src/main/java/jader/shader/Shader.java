@@ -27,7 +27,7 @@ public class Shader {
 	}
 
 	public Color getColor(float x, float y, float width, float height) {
-		var direction = screenToDirection(x, y, width, height);
+		var direction = scene.camera().screenToDirection(x, y, width, height);
 		var position = scene.camera().position();
 		return getColor(position, direction);
 	}
@@ -120,14 +120,6 @@ public class Shader {
 			f *= AO_DECAY;
 		}
 		return 1.0f - ambient.ao() * occ / total;
-	}
-
-	private Vec3 screenToDirection(float x, float y, float width, float height) {
-		var cam = scene.camera();
-		var ratio = width / height;
-		var ux = (x / width - 0.5f) * ratio / cam.focalLength();
-		var uy = (-y / height + 0.5f) / cam.focalLength();
-		return cam.direction().mulAdd(cam.right(), ux).mulAdd(cam.up(), uy).nor();
 	}
 
 }
