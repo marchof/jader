@@ -1,5 +1,6 @@
 package jader.shader;
 
+import static jader.math.Ray3.ray3;
 import static jader.math.Vec3.vec3;
 import static jader.shape.SimpleShapes.sphere;
 import static java.lang.Math.PI;
@@ -27,12 +28,14 @@ public class RayMarchTest {
 	}
 
 	void should_hit_sphere(double alpha) {
+		
 		var sphere = sphere(vec3(0, 0, 0), 1).with(Material.DEFAULT);
 
 		var x = cos(alpha);
 		var y = sin(alpha);
+		var ray = ray3(vec3(2, y, 0), vec3(-1, 0, 0));
 
-		var rm = RayMarch.from(vec3(2, y, 0), vec3(-1, 0, 0), sphere, 10f);
+		var rm = RayMarch.from(ray, sphere, 10f);
 
 		if (rm instanceof Hit hit) {
 			var expectedHit = vec3(x, y, 0);

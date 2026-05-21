@@ -1,5 +1,6 @@
 package jader.shader;
 
+import jader.math.Ray3;
 import jader.math.Vec3;
 import jader.shape.Shape;
 
@@ -18,7 +19,7 @@ sealed interface RayMarch {
 
 	static final int MAX_STEPS = 400;
 
-	public static RayMarch from(Vec3 start, Vec3 direction, Shape shape, float maxMarchDistance) {
+	public static RayMarch from(Ray3 ray, Shape shape, float maxMarchDistance) {
 
 		Shape.Distance closestDistance = null;
 		var minLength = Float.MAX_VALUE;
@@ -26,7 +27,7 @@ sealed interface RayMarch {
 		var marchDist = 0f;
 
 		for (var steps = 0;; steps++) {
-			var p = start.mulAdd(direction, marchDist);
+			var p = ray.pointAt(marchDist);
 			var distance = shape.distance(p);
 			var len = distance.length();
 			if (len < minLength) {

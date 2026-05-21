@@ -1,9 +1,11 @@
 package jader.shader;
 
+import static jader.math.Ray3.ray3;
 import static java.lang.Math.abs;
 import static java.lang.Math.min;
 import static java.lang.Math.pow;
 
+import jader.math.Ray3;
 import jader.math.Vec3;
 import jader.scene.Light;
 import jader.scene.Scene;
@@ -27,21 +29,19 @@ public class Shader {
 	}
 
 	public Color getColor(float x, float y, float width, float height) {
-		var direction = scene.camera().screenToDirection(x, y, width, height);
-		var position = scene.camera().position();
-		return getColor(position, direction);
+		return getColor(scene.camera().project(x, y, width, height));
 	}
 
-	public Color getColor(Vec3 start, Vec3 direction) {
-		return getColor(start, direction, 0);
+	public Color getColor(Ray3 ray) {
+		return getColor(ray, 0);
 	}
 
-	private Color getColor(Vec3 start, Vec3 viewDirection, int reflectionCount) {
-		var rm = RayMarch.from(start, viewDirection, scene.shape(), MAX_MARCH_DIST);
+	private Color getColor(Ray3 ray, int reflectionCount) {
+		var rm = RayMarch.from(ray, scene.shape(), MAX_MARCH_DIST);
 		var env = scene.environment();
 		return switch (rm) {
-		case Hit hit -> env.getColor(getColor(viewDirection, hit.point(), hit.distance().material(), reflectionCount),
-				start.dist(hit.point()));
+		case Hit hit -> env.getColor(getColor(ray.direction(), hit.point(), hit.distance().material(), reflectionCount),
+				ray.start().dist(hit.point()));
 		case Miss _ -> env.getColor(null, 0);
 		};
 	}
@@ -70,7 +70,7 @@ public class Shader {
 
 		// Reflections from the scene:
 		if (material.isReflective() && reflectionCount < MAX_REFLECTION_COUNT) {
-			var reflected = getColor(hitHoverPoint, reflectionDirection, reflectionCount + 1);
+			var reflected = getColor(ray3(hitHoverPoint, reflectionDirection), reflectionCount + 1);
 			color = color.mulAdd(material.reflectiveColor(), reflected);
 		}
 
@@ -91,7 +91,7 @@ public class Shader {
 			Vec3 hitNormal, Vec3 reflectionDirection, Color color) {
 		var ln = point.position().direction(hitPoint);
 		var ld = hitHoverPoint.dist(point.position());
-		var rm = RayMarch.from(hitHoverPoint, ln, scene.shape(), ld);
+		var rm = RayMarch.from(ray3(hitHoverPoint, ln), scene.shape(), ld);
 		if (rm instanceof Miss miss) {
 			var blur = min(1.0f, miss.distanceRatio() / (point.radius() / ld));
 			var diffuseFactor = hitNormal.dot(ln);

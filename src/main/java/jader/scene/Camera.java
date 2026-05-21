@@ -1,7 +1,9 @@
 package jader.scene;
 
+import static jader.math.Ray3.ray3;
 import static jader.math.Vec3.vec3;
 
+import jader.math.Ray3;
 import jader.math.Vec3;
 
 public record Camera(
@@ -47,12 +49,12 @@ public record Camera(
 	/// @param y y-coordinate on the camera image (left to right)
 	/// @param width camera width
 	/// @param height camera height
-	/// @return
-	public Vec3 screenToDirection(float x, float y, float width, float height) {
+	/// @return ray at the given screen position
+	public Ray3 project(float x, float y, float width, float height) {
 		var ratio = width / height;
 		var ux = (x / width - 0.5f) * ratio / focalLength;
 		var uy = (-y / height + 0.5f) / focalLength;
-		return direction.mulAdd(right, ux).mulAdd(up(), uy).nor();
+		return ray3(position, direction.mulAdd(right, ux).mulAdd(up(), uy));
 	}
 
 }
