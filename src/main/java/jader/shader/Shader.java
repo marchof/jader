@@ -48,11 +48,7 @@ public class Shader {
 
 	private Color getColor(Vec3 viewDirection, Vec3 hitPoint, Material material, int reflectionCount) {
 
-		var hitGeometry = SurfaceGeometry.calculate(scene.shape(), hitPoint);
-		var hitNormal = hitGeometry.normal();
-		var hitHoverPoint = hitGeometry.hover();
-
-		var reflectionDirection = getReflection(viewDirection, hitNormal);
+		var hitGeometry = HitGeometry.calculate(scene.shape(), hitPoint, viewDirection);
 
 		var color = material.emissiveColor();
 
@@ -60,26 +56,26 @@ public class Shader {
 		for (var light : scene.lights()) {
 			color = switch (light) {
 			case Light.Ambient ambient when ambient.hasAO() -> //
-				applyAmbientOcclusionLight(ambient, material, color, hitPoint, hitNormal);
+				applyAmbientOcclusionLight(ambient, material, hitGeometry, color);
 			case Light.Ambient ambient -> //
 				applySimpleAmbientLight(ambient, material, color);
 			case Light.Point point -> //
-				applyPointLight(point, material, hitPoint, hitHoverPoint, hitNormal, reflectionDirection, color);
+				applyPointLight(point, material, hitGeometry, color);
 			};
 		}
 
 		// Reflections from the scene:
 		if (material.isReflective() && reflectionCount < MAX_REFLECTION_COUNT) {
-			var reflected = getColor(ray3(hitHoverPoint, reflectionDirection), reflectionCount + 1);
+			var reflected = getColor(hitGeometry.reflectionRay(), reflectionCount + 1);
 			color = color.mulAdd(material.reflectiveColor(), reflected);
 		}
 
 		return color;
 	}
 
-	private Color applyAmbientOcclusionLight(Light.Ambient ambient, Material material, Color color, Vec3 hitPoint,
-			Vec3 hitNormal) {
-		var ao = getAmbientOcclusion(ambient, hitPoint, hitNormal);
+	private Color applyAmbientOcclusionLight(Light.Ambient ambient, Material material, HitGeometry hitGeometry,
+			Color color) {
+		var ao = getAmbientOcclusion(ambient, hitGeometry);
 		return color.mulAdd(material.diffuseColor(), ambient.color(), ao);
 	}
 
@@ -87,28 +83,23 @@ public class Shader {
 		return color.mulAdd(material.diffuseColor(), ambient.color());
 	}
 
-	private Color applyPointLight(Light.Point point, Material material, Vec3 hitPoint, Vec3 hitHoverPoint,
-			Vec3 hitNormal, Vec3 reflectionDirection, Color color) {
-		var ln = point.position().direction(hitPoint);
-		var ld = hitHoverPoint.dist(point.position());
-		var rm = RayMarch.from(ray3(hitHoverPoint, ln), scene.shape(), ld);
+	private Color applyPointLight(Light.Point point, Material material, HitGeometry hitGeometry, Color color) {
+		var lightDirection = point.position().direction(hitGeometry.hover());
+		var lightDistance = hitGeometry.hover().dist(point.position());
+		var rm = RayMarch.from(ray3(hitGeometry.hover(), lightDirection), scene.shape(), lightDistance);
 		if (rm instanceof Miss miss) {
-			var blur = min(1.0f, miss.distanceRatio() / (point.radius() / ld));
-			var diffuseFactor = hitNormal.dot(ln);
+			var blur = min(1.0f, miss.distanceRatio() / (point.radius() / lightDistance));
+			var diffuseFactor = hitGeometry.normal().dot(lightDirection);
 			color = color.mulAdd(material.diffuseColor(), point.color(), diffuseFactor * blur);
 			if (material.specularColor().isNonBlack()) {
-				var specularFactor = (float) pow(abs(reflectionDirection.dot(ln)), material.shininess());
+				var specularFactor = (float) pow(abs(hitGeometry.reflectionDirection().dot(lightDirection)), material.shininess());
 				color = color.mulAdd(material.specularColor(), point.color(), specularFactor * blur);
 			}
 		}
 		return color;
 	}
 
-	private Vec3 getReflection(Vec3 viewDirection, Vec3 surfaceNormal) {
-		return viewDirection.mulSub(surfaceNormal, viewDirection.dot(surfaceNormal) * 2f);
-	}
-
-	private float getAmbientOcclusion(Light.Ambient ambient, Vec3 hitPoint, Vec3 hitNormal) {
+	private float getAmbientOcclusion(Light.Ambient ambient, HitGeometry hitGeometry) {
 		var stepsize = ambient.aoRange() / AO_STEPS;
 		var occ = 0.0f;
 		var total = 0.0f;
@@ -116,7 +107,7 @@ public class Shader {
 		for (var i = 1; i <= AO_STEPS; ++i) {
 			var dist = stepsize * i;
 			total += dist * f;
-			occ += (dist - scene.shape().distance(hitPoint.mulAdd(hitNormal, dist)).length()) * f;
+			occ += (dist - scene.shape().distance(hitGeometry.hover(dist)).length()) * f;
 			f *= AO_DECAY;
 		}
 		return 1.0f - ambient.ao() * occ / total;

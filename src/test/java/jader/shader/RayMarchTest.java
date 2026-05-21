@@ -43,7 +43,7 @@ public class RayMarchTest {
 			assertTrue(surfaceDistance < 0.005, "Actual Distance: " + surfaceDistance);
 			var expectedNormal = vec3(x, y, 0);
 
-			var details = SurfaceGeometry.calculate(sphere, hit.point());
+			var details = HitGeometry.calculate(sphere, hit.point(), ray.direction());
 			var normalDeviation = details.normal().dot(expectedNormal);
 			assertTrue(normalDeviation > 0.99999, "Actual Deviation: " + normalDeviation);
 		} else {
