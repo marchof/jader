@@ -2,13 +2,18 @@ package jader.shader;
 
 import jader.math.Ray3;
 import jader.math.Vec3;
+import jader.shape.Material;
 import jader.shape.Shape;
 
 /// The result of a ray marching operation.
 sealed interface RayMarch {
 
 	/// Successful ray march that hits a surface.
-	record Hit(Vec3 point, Shape.Distance distance) implements RayMarch {
+	record Hit(Vec3 point, Shape.Distance closestDistance, float distance) implements RayMarch {
+		
+		public Material material() {
+			return closestDistance.material();
+		}
 	}
 
 	/// Ray march that exceeds the maximum distance without a hit.
@@ -46,7 +51,7 @@ sealed interface RayMarch {
 				}
 			}
 			if (len < MIN_SURFACE_DIST || steps > MAX_STEPS) {
-				return new Hit(p, closestDistance);
+				return new Hit(p, closestDistance, marchDist);
 			}
 			if ((marchDist += len) > maxMarchDistance) {
 				return new Miss(minDistanceRatio);

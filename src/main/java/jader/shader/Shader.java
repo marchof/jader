@@ -40,8 +40,8 @@ public class Shader {
 		var rm = RayMarch.from(ray, scene.shape(), MAX_MARCH_DIST);
 		var env = scene.environment();
 		return switch (rm) {
-		case Hit hit -> env.getColor(getColor(ray.direction(), hit.point(), hit.distance().material(), reflectionCount),
-				ray.start().dist(hit.point()));
+		case Hit hit ->
+			env.getColor(getColor(ray.direction(), hit.point(), hit.material(), reflectionCount), hit.distance());
 		case Miss _ -> env.getColor(null, 0);
 		};
 	}
@@ -92,7 +92,8 @@ public class Shader {
 			var diffuseFactor = hitGeometry.normal().dot(lightDirection);
 			color = color.mulAdd(material.diffuseColor(), point.color(), diffuseFactor * blur);
 			if (material.specularColor().isNonBlack()) {
-				var specularFactor = (float) pow(abs(hitGeometry.reflectionDirection().dot(lightDirection)), material.shininess());
+				var specularFactor = (float) pow(abs(hitGeometry.reflectionDirection().dot(lightDirection)),
+						material.shininess());
 				color = color.mulAdd(material.specularColor(), point.color(), specularFactor * blur);
 			}
 		}
