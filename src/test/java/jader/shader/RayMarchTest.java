@@ -44,7 +44,7 @@ public class RayMarchTest {
 			var expectedNormal = vec3(x, y, 0);
 
 			var details = HitGeometry.calculate(sphere, hit.point(), ray.direction());
-			var normalDeviation = details.normal().dot(expectedNormal);
+			var normalDeviation = details.normalRay().direction().dot(expectedNormal);
 			assertTrue(normalDeviation > 0.99999, "Actual Deviation: " + normalDeviation);
 		} else {
 			fail("Hit expected");

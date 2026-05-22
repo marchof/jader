@@ -1,6 +1,5 @@
 package jader.shader;
 
-import static jader.math.Ray3.ray3;
 import static java.lang.Math.abs;
 import static java.lang.Math.min;
 import static java.lang.Math.pow;
@@ -75,7 +74,7 @@ public class Shader {
 
 	private Color applyAmbientOcclusionLight(Light.Ambient ambient, Material material, HitGeometry hitGeometry,
 			Color color) {
-		var ao = getAmbientOcclusion(ambient, hitGeometry);
+		var ao = getAmbientOcclusion(ambient, hitGeometry.normalRay());
 		return color.mulAdd(material.diffuseColor(), ambient.color(), ao);
 	}
 
@@ -84,15 +83,19 @@ public class Shader {
 	}
 
 	private Color applyPointLight(Light.Point point, Material material, HitGeometry hitGeometry, Color color) {
-		var lightDirection = point.position().direction(hitGeometry.hover());
-		var lightDistance = hitGeometry.hover().dist(point.position());
-		var rm = RayMarch.from(ray3(hitGeometry.hover(), lightDirection), scene.shape(), lightDistance);
+		var lightRay = hitGeometry.rayTo(point.position());
+		var lightDistance = lightRay.start().dist(point.position());
+		var rm = RayMarch.from(lightRay, scene.shape(), lightDistance);
 		if (rm instanceof Miss miss) {
 			var blur = min(1.0f, miss.distanceRatio() / (point.radius() / lightDistance));
-			var diffuseFactor = hitGeometry.normal().dot(lightDirection);
+			
+			// Diffuse light reflection:
+			var diffuseFactor = hitGeometry.normalRay().direction().dot(lightRay.direction());
 			color = color.mulAdd(material.diffuseColor(), point.color(), diffuseFactor * blur);
+			
+			// Specular light reflection:
 			if (material.specularColor().isNonBlack()) {
-				var specularFactor = (float) pow(abs(hitGeometry.reflectionDirection().dot(lightDirection)),
+				var specularFactor = (float) pow(abs(hitGeometry.reflectionRay().direction().dot(lightRay.direction())),
 						material.shininess());
 				color = color.mulAdd(material.specularColor(), point.color(), specularFactor * blur);
 			}
@@ -100,7 +103,7 @@ public class Shader {
 		return color;
 	}
 
-	private float getAmbientOcclusion(Light.Ambient ambient, HitGeometry hitGeometry) {
+	private float getAmbientOcclusion(Light.Ambient ambient, Ray3 surfaceNormal) {
 		var stepsize = ambient.aoRange() / AO_STEPS;
 		var occ = 0.0f;
 		var total = 0.0f;
@@ -108,7 +111,7 @@ public class Shader {
 		for (var i = 1; i <= AO_STEPS; ++i) {
 			var dist = stepsize * i;
 			total += dist * f;
-			occ += (dist - scene.shape().distance(hitGeometry.hover(dist)).length()) * f;
+			occ += (dist - scene.shape().distance(surfaceNormal.pointAt(dist)).length()) * f;
 			f *= AO_DECAY;
 		}
 		return 1.0f - ambient.ao() * occ / total;

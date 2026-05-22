@@ -1,5 +1,7 @@
 package jader.shader;
 
+import static jader.math.Ray3.ray3;
+import static jader.math.Ray3.ray3To;
 import static jader.math.Vec3.vec3;
 import static jader.shader.RayMarch.MIN_SURFACE_DIST;
 
@@ -9,18 +11,15 @@ import jader.shape.Shape;
 
 /// Geometric information about the hit point on a surface.
 record HitGeometry(
-		
-		/// Hit point on the surface 
-		Vec3 point,
-		
-		/// Surface normal at the hit point
-		Vec3 normal,
-		
+
 		/// Point just over the hit point so that the surface does not interfere with ray marching
 		Vec3 hover,
-		
-		/// Direction of the reflection on the surface from the provided view direction
-		Vec3 reflectionDirection) {
+
+		/// Ray from the surface point in surface normal direction
+		Ray3 normalRay,
+
+		/// Ray from the hover point in direction of the reflection given the provided view direction
+		Ray3 reflectionRay) {
 
 	// Pre-calculated tetrahedron edges for normal calculation
 	private static final float TSIZE = 0.00001f;
@@ -42,22 +41,15 @@ record HitGeometry(
 				-d1 - d2 + d3 + d4, //
 				-d1 + d2 - d3 + d4).nor();
 
-		var hover = hover(point, normal, 2 * MIN_SURFACE_DIST);
-		var reflectionDirection = viewDirection.mulSub(normal, viewDirection.dot(normal) * 2f);
+		var surfaceNormal = ray3(point, normal);
+		var hover = surfaceNormal.pointAt(2 * MIN_SURFACE_DIST);
+		var relectionRay = ray3(hover, viewDirection.mulSub(normal, viewDirection.dot(normal) * 2f));
 
-		return new HitGeometry(point, normal, hover, reflectionDirection);
+		return new HitGeometry(hover, surfaceNormal, relectionRay);
 	}
 
-	public Ray3 reflectionRay() {
-		return Ray3.ray3(hover, reflectionDirection);
-	}
-	
-	public Vec3 hover(float dist) {
-		return hover(point, normal, dist);
-	}
-	
-	private static Vec3 hover(Vec3 point, Vec3 normal, float dist) {
-		return point.mulAdd(normal, dist);
+	public Ray3 rayTo(Vec3 target) {
+		return ray3To(hover, target);
 	}
 
 }
