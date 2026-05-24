@@ -1,65 +1,74 @@
 package jader.ui;
 
-import static java.time.Instant.now;
-
 import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.time.Duration;
-import java.util.function.Consumer;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import jader.scene.Scene;
-import jader.shader.Rasterer;
+import jader.ui.RenderingController.ImageOutput;
 
-public class UI {
+public class UI implements ImageOutput {
 
 	private static final int HIDPI_FACTOR = 2;
 
 	private Scene scene = ExampleScenes.scene1();
-	
-	private Rasterer rasterer = new Rasterer();
+
+	private JFrame frame;
+
+	private Component shaderPanel;
 
 	private BufferedImage buffer;
 
+	private RenderingController controller;
+
 	public void start() {
-		var frame = new JFrame("Jader");
+		frame = new JFrame("Jader");
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setSize(640, 400);
-		frame.getContentPane().add(createShaderPanel(frame::setTitle));
+		shaderPanel = createShaderPanel();
+		frame.getContentPane().add(shaderPanel);
 		frame.setVisible(true);
+		controller = new RenderingController(this);
+		shaderPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				schedule();
+			}
+		});
+		schedule();
 	}
 
-	private Component createShaderPanel(Consumer<String> frameinfo) {
+	private void schedule() {
+		controller.schedule(shaderPanel.getWidth() * HIDPI_FACTOR, shaderPanel.getHeight() * HIDPI_FACTOR, scene);
+	}
+
+	private Component createShaderPanel() {
 		var panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void paint(Graphics g) {
-				var g2d = (Graphics2D) g;
-				var buffer = getBuffer(this.getWidth() * HIDPI_FACTOR, this.getHeight() * HIDPI_FACTOR);
-				var start = now();
-				rasterer.render(scene, buffer);
-				var info = "Jader - %sx%spx %sms".formatted(buffer.getWidth(), buffer.getHeight(),
-						Duration.between(start, now()).toMillis());
-				frameinfo.accept(info);
-				g2d.drawImage(buffer, 0, 0, buffer.getWidth() / HIDPI_FACTOR, buffer.getHeight() / HIDPI_FACTOR, null);
-				repaint();
+				if (buffer != null) {
+					g.drawImage(buffer, 0, 0, this.getWidth(), this.getHeight(), this);
+				}
 			}
 		};
 		return panel;
 	}
 
-	private BufferedImage getBuffer(int width, int height) {
-		if (buffer != null && buffer.getWidth() == width && buffer.getHeight() == height) {
-			return buffer;
-		} else {
-			return buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		}
+	@Override
+	public void show(BufferedImage buffer, Duration renderingTime) {
+		var info = "Jader - %sx%spx %sms".formatted(buffer.getWidth(), buffer.getHeight(), renderingTime.toMillis());
+		frame.setTitle(info);
+		this.buffer = buffer;
+		this.shaderPanel.repaint();
 	}
 
 	public static void main(String[] args) {

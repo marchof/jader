@@ -12,6 +12,8 @@ public class Rasterer {
 	private final int oversampling;
 	private final boolean multithreaded;
 
+	private boolean cancelled = false;
+
 	public Rasterer(int oversampling, boolean multithreaded) {
 		this.oversampling = oversampling;
 		this.multithreaded = multithreaded;
@@ -36,6 +38,10 @@ public class Rasterer {
 		}
 	}
 
+	public void cancel() {
+		cancelled = true;
+	}
+
 	private void renderSingleThreaded(Shader shader, BufferedImage image) {
 		for (int y = 0; y < image.getHeight(); y++) {
 			renderRow(shader, y, image);
@@ -49,6 +55,9 @@ public class Rasterer {
 	}
 
 	private void renderRow(Shader shader, int y, BufferedImage image) {
+		if (cancelled) {
+			return;
+		}
 		var width = image.getWidth();
 		var height = image.getHeight();
 		for (int x = 0; x < width; x++) {
