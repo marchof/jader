@@ -16,8 +16,6 @@ import jader.ui.RenderingController.ImageOutput;
 
 public class UI implements ImageOutput {
 
-	private static final int HIDPI_FACTOR = 2;
-
 	private Scene scene = ExampleScenes.scene1();
 
 	private JFrame frame;
@@ -46,7 +44,11 @@ public class UI implements ImageOutput {
 	}
 
 	private void schedule() {
-		controller.schedule(shaderPanel.getWidth() * HIDPI_FACTOR, shaderPanel.getHeight() * HIDPI_FACTOR, scene);
+		// Adjust rendered pixels to physical resolution for retina support:
+		var t = shaderPanel.getGraphicsConfiguration().getDefaultTransform();
+		var pixelsX = (int) (shaderPanel.getWidth() * t.getScaleX());
+		var pixelsY = (int) (shaderPanel.getHeight() * t.getScaleY());
+		controller.schedule(pixelsX, pixelsY, scene);
 	}
 
 	private Component createShaderPanel() {
