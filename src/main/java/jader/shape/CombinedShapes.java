@@ -5,95 +5,138 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 import jader.math.Vec3;
-import jader.shape.Shape.Distance;
 
 public class CombinedShapes {
 
 	public static Shape union(Shape... shapes) {
-		return p -> minSDF(p, shapes);
+		record MinShape(Shape[] shapes) implements Shape {
+
+			@Override
+			public float distance(Vec3 p) {
+				var mindist = Float.MAX_VALUE;
+				for (var s : shapes) {
+					var dist = s.distance(p);
+					if (dist < mindist) {
+						mindist = dist;
+					}
+				}
+				return mindist;
+			}
+
+			@Override
+			public Material material(Vec3 p) {
+				var mindist = Float.MAX_VALUE;
+				Shape minDistShape = null;
+				for (var s : shapes) {
+					var dist = s.distance(p);
+					if (dist < mindist) {
+						mindist = dist;
+						minDistShape = s;
+					}
+				}
+				return minDistShape.material(p);
+			}
+
+		}
+		return new MinShape(shapes);
 	}
 
 	public static Shape intersect(Shape... shapes) {
-		return p -> maxSDF(p, shapes);
+		record MaxShape(Shape[] shapes) implements Shape {
+
+			@Override
+			public float distance(Vec3 p) {
+				var maxdist = -Float.MAX_VALUE;
+				for (var s : shapes) {
+					var dist = s.distance(p);
+					if (dist > maxdist) {
+						maxdist = dist;
+					}
+				}
+				return maxdist;
+			}
+
+			@Override
+			public Material material(Vec3 p) {
+				var maxdist = -Float.MAX_VALUE;
+				Shape maxDistShape = null;
+				for (var s : shapes) {
+					var dist = s.distance(p);
+					if (dist > maxdist) {
+						maxdist = dist;
+						maxDistShape = s;
+					}
+				}
+				return maxDistShape.material(p);
+			}
+
+		}
+		return new MaxShape(shapes);
 	}
 
 	public static Shape subtract(Shape a, Shape b) {
-		return p -> {
-			var dista = a.distance(p);
-			var distb = b.distance(p);
-			var lb = distb.length();
-			return (dista.length() > -lb) ? dista : distb.withLength(-lb);
+		record SubShape(Shape a, Shape b) implements Shape {
+
+			@Override
+			public float distance(Vec3 p) {
+				var da = a.distance(p);
+				var db = b.distance(p);
+				return (da > -db) ? da : -db;
+			}
+
+			@Override
+			public Material material(Vec3 p) {
+				var da = a.distance(p);
+				var db = b.distance(p);
+				return (da > -db) ? a.material(p) : b.material(p);
+			}
+			
 		};
+		return new SubShape(a, b);
 	}
 
 	public static Shape smoothUnion(Shape shape1, Shape shape2, float k) {
-		var k4 = k * 4.0f;
-		return p -> {
-			var dist1 = shape1.distance(p);
-			var dist2 = shape2.distance(p);
-			var l1 = dist1.length();
-			var l2 = dist2.length();
-			var h = max(k4 - abs(l1 - l2), 0.0f);
-			var d = min(l1, l2) - h * h * 0.25f / k4;
-			return new BlendedMaterialDistance(d, dist1, dist2, l1 / (l1 + l2));
-		};
+		record BlendedShape(Shape shape1, Shape shape2, float k4) implements Shape {
+
+			@Override
+			public float distance(Vec3 p) {
+				var d1 = shape1.distance(p);
+				var d2 = shape2.distance(p);
+				var h = max(k4 - abs(d1 - d2), 0.0f);
+				return min(d1, d2) - h * h * 0.25f / k4;
+			}
+
+			@Override
+			public Material material(Vec3 p) {
+				var d1 = shape1.distance(p);
+				var d2 = shape2.distance(p);
+				return shape1.material(p).blend(shape2.material(p), d1 / (d1 + d2));
+			}
+			
+		}
+		return new BlendedShape(shape1, shape2, k * 4.0f);
 	}
-	
+
 	public static Shape smoothSubtract(Shape shape1, Shape shape2, float k) {
-		var k4 = k * 4.0f;
-		return p -> {
-			var dist1 = shape1.distance(p);
-			var dist2 = shape2.distance(p);
-			var l1 = -dist1.length();
-			var l2 = dist2.length();
-			var h = max(k4 - abs(l1 - l2), 0.0f);
-			var d = min(l1, l2) - h * h * 0.25f / k4;
-			return new BlendedMaterialDistance(-d, dist1, dist2, l1 / (l1 + l2));
-		};
-	}
-	
-	private static record BlendedMaterialDistance(float length, Distance d1, Distance d2, float f) implements Shape.Distance {
-		@Override
-		public Material material() {
-			return d1.material().blend(d2.material(), f);
-		}
+		record BlendedShape(Shape shape1, Shape shape2, float k4) implements Shape {
 
-		@Override
-		public Distance withLength(float l) {
-			return new BlendedMaterialDistance(l, d1, d2, f);
-		}
-	}
-
-	// While the following methods could be nicely implemented with streams, the
-	// performance drawback is too large for these critical-path operations.
-	// Therefore, we use these allocation-free implementations.
-
-	private static Distance minSDF(Vec3 p, Shape... shapes) {
-		var mindist = Float.MAX_VALUE;
-		Distance result = null;
-		for (var s : shapes) {
-			var d = s.distance(p);
-			var dist = d.length();
-			if (dist < mindist) {
-				mindist = dist;
-				result = d;
+			@Override
+			public float distance(Vec3 p) {
+				var d1 = -shape1.distance(p);
+				var d2 = shape2.distance(p);
+				var h = max(k4 - abs(d1 - d2), 0.0f);
+				return h * h * 0.25f / k4 - min(d1, d2);
 			}
-		}
-		return result;
-	}
 
-	private static Distance maxSDF(Vec3 p, Shape... shapes) {
-		var maxdist = -Float.MAX_VALUE;
-		Distance result = null;
-		for (var s : shapes) {
-			var d = s.distance(p);
-			var dist = d.length();
-			if (dist > maxdist) {
-				maxdist = dist;
-				result = d;
+			@Override
+			public Material material(Vec3 p) {
+				var d1 = -shape1.distance(p);
+				var d2 = shape2.distance(p);
+				return shape1.material(p).blend(shape2.material(p), d1 / (d1 + d2));
 			}
+			
 		}
-		return result;
+		return new BlendedShape(shape1, shape2, k * 4.0f);
 	}
 
 }

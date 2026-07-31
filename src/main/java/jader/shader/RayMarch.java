@@ -2,18 +2,13 @@ package jader.shader;
 
 import jader.math.Ray3;
 import jader.math.Vec3;
-import jader.shape.Material;
 import jader.shape.Shape;
 
 /// The result of a ray marching operation.
 sealed interface RayMarch {
 
 	/// Successful ray march that hits a surface.
-	record Hit(Vec3 point, Shape.Distance closestDistance, float distance) implements RayMarch {
-		
-		public Material material() {
-			return closestDistance.material();
-		}
+	record Hit(Vec3 point, float distance) implements RayMarch {
 	}
 
 	/// Ray march that exceeds the maximum distance without a hit.
@@ -26,18 +21,15 @@ sealed interface RayMarch {
 
 	public static RayMarch from(Ray3 ray, Shape shape, float maxMarchDistance) {
 
-		Shape.Distance closestDistance = null;
-		var minLength = Float.MAX_VALUE;
+		var minDistance = Float.MAX_VALUE;
 		var minDistanceRatio = 1f;
 		var marchDist = 0f;
 
 		for (var steps = 0;; steps++) {
 			var p = ray.pointAt(marchDist);
 			var distance = shape.distance(p);
-			var len = distance.length();
-			if (len < minLength) {
-				closestDistance = distance;
-				minLength = len;
+			if (distance < minDistance) {
+				minDistance = distance;
 			} else {
 				// When we move away from a surface we reset the step counter.
 				// Otherwise near-misses will influence the ray marching towards
@@ -45,15 +37,15 @@ sealed interface RayMarch {
 				steps = 0;
 			}
 			if (marchDist > 0f) {
-				var dr = len / marchDist;
+				var dr = distance / marchDist;
 				if (dr < minDistanceRatio) {
 					minDistanceRatio = dr;
 				}
 			}
-			if (len < MIN_SURFACE_DIST || steps > MAX_STEPS) {
-				return new Hit(p, closestDistance, marchDist);
+			if (distance < MIN_SURFACE_DIST || steps > MAX_STEPS) {
+				return new Hit(p, marchDist);
 			}
-			if ((marchDist += len) > maxMarchDistance) {
+			if ((marchDist += distance) > maxMarchDistance) {
 				return new Miss(minDistanceRatio);
 			}
 		}

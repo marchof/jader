@@ -4,7 +4,6 @@ import static jader.math.Vec2.vec2;
 
 import jader.math.Vec2;
 import jader.math.Vec3;
-import jader.shape.Shape.Distance;
 
 public record ShapeBuilder(SDF sdf, UVMapper mapper) {
 
@@ -29,32 +28,37 @@ public record ShapeBuilder(SDF sdf, UVMapper mapper) {
 	}
 
 	public Shape with(Material material) {
-		return p -> new MaterialDistance(sdf.dist(p), material);
+		record UniformMaterialShape(SDF sdf, Material material) implements Shape {
+
+			@Override
+			public float distance(Vec3 p) {
+				return sdf.dist(p);
+			}
+
+			@Override
+			public Material material(Vec3 p) {
+				return material;
+			}
+
+		}
+		return new UniformMaterialShape(sdf, material);
 	}
 
 	public Shape with(Surface surface) {
-		return p -> new SurfaceDistance(sdf.dist(p), p, mapper, surface);
-	}
+		record SurfaceMaterialShape(SDF sdf, UVMapper mapper, Surface surface) implements Shape {
 
-	private static record MaterialDistance(float length, Material material) implements Shape.Distance {
+			@Override
+			public float distance(Vec3 p) {
+				return sdf.dist(p);
+			}
 
-		@Override
-		public Distance withLength(float l) {
-			return new MaterialDistance(l, material);
+			@Override
+			public Material material(Vec3 p) {
+				return surface.material(mapper.uv(p));
+			}
+
 		}
-	}
-
-	private static record SurfaceDistance(float length, Vec3 p, UVMapper uvMapper, Surface surface)
-			implements Shape.Distance {
-		@Override
-		public Material material() {
-			return surface.material(uvMapper.uv(p));
-		}
-
-		@Override
-		public Distance withLength(float l) {
-			return new SurfaceDistance(l, p, uvMapper, surface);
-		}
+		return new SurfaceMaterialShape(sdf, mapper, surface);
 	}
 
 }
