@@ -3,7 +3,7 @@ package jader.math;
 import static jader.math.Vec2.vec2;
 import static java.lang.Math.sqrt;
 
-public record Vec3(float x, float y, float z) {
+public value record Vec3(float x, float y, float z) {
 
 	public static Vec3 vec3(float x, float y, float z) {
 		return new Vec3(x, y, z);

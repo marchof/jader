@@ -1,1 +1,4 @@
-mvn -Dexec.classpathScope=test -Dexec.mainClass=jader.ShaderPerformance compile exec:java
+mvn compile
+echo "Running shader performance test..."
+java --enable-preview -cp target/classes:target/test-classes jader.ShaderPerformance
+
