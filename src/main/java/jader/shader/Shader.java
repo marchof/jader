@@ -40,7 +40,7 @@ public class Shader {
 		var env = scene.environment();
 		return switch (rm) {
 		case Hit hit ->
-			env.getColor(getColor(ray.direction(), hit.point(), hit.material(), reflectionCount), hit.distance());
+			env.getColor(getColor(ray.direction(), hit.point(), scene.shape().material(hit.point()), reflectionCount), hit.distance());
 		case Miss _ -> env.getColor(null, 0);
 		};
 	}
@@ -111,7 +111,7 @@ public class Shader {
 		for (var i = 1; i <= AO_STEPS; ++i) {
 			var dist = stepsize * i;
 			total += dist * f;
-			occ += (dist - scene.shape().distance(surfaceNormal.pointAt(dist)).length()) * f;
+			occ += (dist - scene.shape().distance(surfaceNormal.pointAt(dist))) * f;
 			f *= AO_DECAY;
 		}
 		return 1.0f - ambient.ao() * occ / total;
