@@ -1,7 +1,7 @@
 package jader.math;
 
 /// A ray in 3 dimensions described as a starting point and a direction.
-public record Ray3(Vec3 start, Vec3 direction) {
+public value record Ray3(Vec3 start, Vec3 direction) {
 
 	public Ray3 {
 		direction = direction.nor();

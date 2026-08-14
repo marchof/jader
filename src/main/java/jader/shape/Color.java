@@ -5,7 +5,7 @@ import static java.lang.Math.pow;
 
 /// Color in linear space for shading calculations. Conversion to and from RGB
 /// includes gamma correction.
-public record Color(float red, float green, float blue) {
+public value record Color(float red, float green, float blue) {
 
 	private static final double GAMMA = 2.2;
 

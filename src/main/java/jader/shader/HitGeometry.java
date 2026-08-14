@@ -10,7 +10,7 @@ import jader.math.Vec3;
 import jader.shape.Shape;
 
 /// Geometric information about the hit point on a surface.
-record HitGeometry(
+value record HitGeometry(
 
 		/// Point just over the hit point so that the surface does not interfere with ray marching
 		Vec3 hover,
